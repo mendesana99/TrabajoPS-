@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Platform</title>
+    <style>
+        .seat {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .available {
+            background-color: #10b981;
+            color: white;
+        }
+
+            .available:hover {
+                background-color: #059669;
+            }
+
+        .occupied {
+            background-color: #ef4444;
+            color: white;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h1>🎵 Concierto de Rock</h1>
+    <div id="seats"></div>
+
+    <script>
+        const USER_ID = 1;
+
+        async function loadSeats() {
+            const res = await fetch('/api/v1/events/1/seats');
+            const seats = await res.json();
+
+            const container = document.getElementById('seats');
+            container.innerHTML = seats.map(seat => `
+                    <div class="seat ${seat.status === 'Available' ? 'available' : 'occupied'}"
+                         onclick="${seat.status === 'Available' ? `reserve('${seat.id}')` : ''}">
+                        ${seat.rowIdentifier}-${seat.seatNumber}
+                    </div>
+                `).join('');
+        }
+
+        async function reserve(seatId) {
+            const res = await fetch('/api/v1/reservations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ seatId: seatId, userId: USER_ID })
+            });
+
+            if (res.ok) {
+                alert('✅ Reserva exitosa! Tenés 5 minutos para pagar.');
+                loadSeats();
+            } else if (res.status === 409) {
+                alert('❌ El asiento ya no está disponible');
+                loadSeats();
+            } else {
+                alert('❌ Error en la reserva');
+            }
+        }
+
+        loadSeats();
+    </script>
+</body>
+</html>
