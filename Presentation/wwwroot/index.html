@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketPlatform | Compra tu entrada</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+    <div class="overlay-mesh"></div>
+
+    <header class="glass-nav">
+        <h1 class="logo">Ticket<span>Platform</span></h1>
+        <div class="user-profile">
+            <div class="avatar">👨‍🎤</div>
+            <span>Usuario Juan Pérez (Id: 1)</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="event-info glass-card">
+            <h2 id="event-title">Cargando Evento...</h2>
+            <p id="event-venue" class="venue">Buscando recinto...</p>
+            <p class="instruction">Selecciona tu butaca en el mapa para bloquearla.</p>
+        </section>
+
+        <section class="stadium-container glass-card">
+            <div class="stage">ESCENARIO</div>
+            <div id="seats-map" class="seats-map">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="legend">
+                <div class="legend-item"><div class="seat-badge available"></div> Disponible</div>
+                <div class="legend-item"><div class="seat-badge reserved"></div> Reservado</div>
+                <div class="legend-item"><div class="seat-badge sold"></div> Vendido</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Reserva y Pago -->
+    <div id="payment-modal" class="modal hidden">
+        <div class="modal-content glass-card popup-anim">
+            <h2>¡Butaca Reservada! 🎉</h2>
+            <p>Se ha bloqueado la butaca para ti.</p>
+            <div class="ticket-stub">
+                <div class="stub-row"><span>Asiento:</span> <strong id="modal-seat-info">N/A</strong></div>
+                <div class="stub-row"><span>ID Reserva:</span> <span class="id-text" id="modal-reservation-id">N/A</span></div>
+            </div>
+            
+            <div class="timer-box">
+                <p>El bloqueo expira en:</p>
+                <div id="countdown" class="clock">05:00</div>
+            </div>
+
+            <button id="btn-pay" class="glow-btn pulse-anim">💰 Confirmar Pago y Comprar</button>
+            <button id="btn-cancel" class="ghost-btn">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Éxito Final -->
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-content success-card glass-card">
+            <h2 class="rainbow-text">¡COMPRA EXITOSA!</h2>
+            <p>Disfruta de tu concierto.</p>
+            <button onclick="location.reload()" class="glow-btn">Volver al mapa</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
