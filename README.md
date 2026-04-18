@@ -73,5 +73,5 @@ Se implementó una **Arquitectura Limpia** dividida en 4 capas para asegurar el 
 
 ---
 **Cátedra**: Proyecto de Software  
-**Docente**: Ing. Olivera Lucas  
-**Alumno**: Juan Pérez (Mock)
+**Docente**: Cabral, Leonardo.
+**Alumnos**: Condori, Edson. Mendes, Ana.
