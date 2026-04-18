@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -21,13 +18,4 @@ namespace Domain.Entities
         // Navigation properties
         public Sector? Sector { get; set; }
     }
-
-    public enum SeatStatus
-    {
-        Available,
-        Reserved,
-        Sold
-    }
-
-
 }

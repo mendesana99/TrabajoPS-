@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -16,12 +14,5 @@ namespace Domain.Entities
 
         // Navigation properties
         public ICollection<Sector> Sectors { get; set; } = new List<Sector>();
-    }
-
-    public enum EventStatus
-    {
-        Active,
-        Cancelled,
-        Finished
     }
 }

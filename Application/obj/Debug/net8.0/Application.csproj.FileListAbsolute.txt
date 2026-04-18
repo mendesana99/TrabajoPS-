@@ -1,0 +1,6 @@
+C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.csproj.AssemblyReference.cache
+C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.AssemblyInfoInputs.cache
+C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.AssemblyInfo.cs
+C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.csproj.CoreCompileInputs.cache
+C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.sourcelink.json
