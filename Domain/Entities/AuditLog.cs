@@ -2,7 +2,7 @@ using System;
 
 namespace Domain.Entities
 {
-    public class AuditLog : BaseEntity
+    public class AuditLog
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public int? UserId { get; set; }
@@ -10,6 +10,7 @@ namespace Domain.Entities
         public string EntityType { get; set; } = string.Empty;
         public string EntityId { get; set; } = string.Empty;
         public string Details { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
 
         // Navigation properties
         public User? User { get; set; }

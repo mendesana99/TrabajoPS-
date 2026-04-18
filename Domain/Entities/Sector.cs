@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class Sector : BaseEntity
+    public class Sector
     {
         public int Id { get; set; }
         public int EventId { get; set; }
