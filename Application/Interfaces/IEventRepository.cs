@@ -7,15 +7,14 @@ using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IEventRepository
-    {
-        Task<Event> GetEventByIdAsync(Event id);
-        Task<IEnumerable<Event>> GetAllEventsAsync();
-        Task<IEnumerable<Event>> FindEventAsync();
-        Task AddEventAsync(Event entity);
-        Task UpdateEventAsync(Event entity);
-        Task DeleteEventAsync(Event id);
-        Task<int> SaveChangesAsync();
-
-    }
+	public interface IRepository<T> where T : class
+	{
+		Task<T?> GetByIdAsync(object id);
+		Task<IEnumerable<T>> GetAllAsync();
+		Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+		Task<T> AddAsync(T entity);
+		Task UpdateAsync(T entity);
+		Task DeleteAsync(T entity);
+		Task<int> SaveChangesAsync();
+	}
 }
