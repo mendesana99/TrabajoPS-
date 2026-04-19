@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj": {}
+    "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Application\\Application.csproj": {
+    "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\NoPuedoTengoEuler\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Application\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\NoPuedoTengoEuler\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj"
+              "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj"
               }
             }
           }
@@ -48,7 +48,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -69,24 +69,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj": {
+    "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\NoPuedoTengoEuler\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\NoPuedoTengoEuler\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -113,7 +113,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -140,24 +140,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\NoPuedoTengoEuler\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Infrastructure\\Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\NoPuedoTengoEuler\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -172,11 +172,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Application\\Application.csproj"
+              "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Application\\Application.csproj"
               },
-              "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\NoPuedoTengoEuler\\source\\repos\\TrabajoPS-\\Domain\\Domain.csproj"
+              "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\UNAJ\\Repos2026b\\PS2026\\TrabajoPS-\\Domain\\Domain.csproj"
               }
             }
           }
@@ -191,7 +191,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -222,7 +222,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

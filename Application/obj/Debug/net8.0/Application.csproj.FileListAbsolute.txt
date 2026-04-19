@@ -4,3 +4,9 @@ C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\
 C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.AssemblyInfo.cs
 C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.csproj.CoreCompileInputs.cache
 C:\Users\NoPuedoTengoEuler\source\repos\TrabajoPS-\Application\obj\Debug\net8.0\Application.sourcelink.json
+C:\Users\Administrator\UNAJ\Repos2026b\PS2026\TrabajoPS-\Application\obj\Debug\net8.0\Application.csproj.AssemblyReference.cache
+C:\Users\Administrator\UNAJ\Repos2026b\PS2026\TrabajoPS-\Application\obj\Debug\net8.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\UNAJ\Repos2026b\PS2026\TrabajoPS-\Application\obj\Debug\net8.0\Application.AssemblyInfoInputs.cache
+C:\Users\Administrator\UNAJ\Repos2026b\PS2026\TrabajoPS-\Application\obj\Debug\net8.0\Application.AssemblyInfo.cs
+C:\Users\Administrator\UNAJ\Repos2026b\PS2026\TrabajoPS-\Application\obj\Debug\net8.0\Application.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\UNAJ\Repos2026b\PS2026\TrabajoPS-\Application\obj\Debug\net8.0\Application.sourcelink.json

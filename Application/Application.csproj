@@ -12,14 +12,12 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="UseCases\Events\Commands\" />
     <Folder Include="UseCases\Events\Handlers\" />
     <Folder Include="UseCases\Events\Queries\" />
     <Folder Include="UseCases\Reservations\Commands\" />
     <Folder Include="UseCases\Reservations\Handlers\" />
     <Folder Include="UseCases\Reservations\Queries\" />
-    <Folder Include="UseCases\Seats\Commands\" />
     <Folder Include="UseCases\Seats\Handlers\" />
     <Folder Include="UseCases\Seats\Queries\" />
   </ItemGroup>
