@@ -27,7 +27,9 @@ namespace Infrastructure.Persistence
                 Name = "Concierto de Rock 2026",
                 EventDate = DateTime.UtcNow.AddDays(30),
                 Venue = "Estadio Monumental",
-                Status = EventStatus.Active
+                Status = EventStatus.Active.ToString() //se lo asigna como string porque el campo es string,
+                                                       //pero se puede cambiar a enum en la entidad para evitar confusiones
+                                                       //pero esta en la definicion como string
             };
 
             await context.Events.AddAsync(event1);
@@ -63,7 +65,9 @@ namespace Infrastructure.Persistence
                     SectorId = sector1.Id,
                     RowIdentifier = $"Fila {((i - 1) / 10) + 1}",
                     SeatNumber = i,
-                    Status = SeatStatus.Available
+                    Status = SeatStatus.Available.ToString() //se lo asigna como string porque el campo es string,
+                                                             //pero se puede cambiar a enum en la entidad para evitar confusiones
+                                                             //pero esta en la definicion como string
                 });
             }
 
@@ -74,7 +78,9 @@ namespace Infrastructure.Persistence
                     SectorId = sector2.Id,
                     RowIdentifier = $"Fila {((i - 1) / 10) + 1}",
                     SeatNumber = i,
-                    Status = SeatStatus.Available
+                    Status = SeatStatus.Available.ToString()    //se lo asigna como string porque el campo es string,
+                                                                //pero se puede cambiar a enum en la entidad para evitar confusiones
+                                                                //pero esta en la definicion como string
                 });
             }
 

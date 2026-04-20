@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces;
@@ -9,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-	public class Repository<T> : IRepository<T> where T : class
+	public class EventRepository<T> : IEventRepository<T> where T : class
 	{
 		protected readonly AppDbContext _context;
 		protected readonly DbSet<T> _dbSet;
 	
-		public Repository(AppDbContext context)
+		public EventRepository(AppDbContext context)
 		{
 			_context = context;
 			_dbSet = context.Set<T>();
@@ -34,8 +35,9 @@ namespace Infrastructure.Persistence.Repositories
 		{
 			return await _dbSet.Where(predicate).ToListAsync();
 		}
-	
-		public async Task<T> AddAsync(T entity)
+
+
+        public async Task<T> AddAsync(T entity)
 		{
 			await _dbSet.AddAsync(entity);
 			return entity;
@@ -57,5 +59,6 @@ namespace Infrastructure.Persistence.Repositories
 		{
 			return await _context.SaveChangesAsync();
 		}
-	}
+
+    }
 }
