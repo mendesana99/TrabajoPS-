@@ -1,25 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="UseCases\Events\Commands\" />
-    <Folder Include="UseCases\Events\Handlers\" />
-    <Folder Include="UseCases\Events\Queries\" />
-    <Folder Include="UseCases\Reservations\Commands\" />
-    <Folder Include="UseCases\Reservations\Handlers\" />
-    <Folder Include="UseCases\Reservations\Queries\" />
-    <Folder Include="UseCases\Seats\Handlers\" />
-    <Folder Include="UseCases\Seats\Queries\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
 </Project>
