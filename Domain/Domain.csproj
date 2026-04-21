@@ -9,8 +9,4 @@
 	<ItemGroup>
 		<PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Enums\" />
-	</ItemGroup>
 </Project>
