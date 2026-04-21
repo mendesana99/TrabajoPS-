@@ -8,12 +8,10 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            // Register Handlers
+            services.AddScoped<GetEventsHandler>();
+            services.AddScoped<GetSeatsByEventHandler>();
             services.AddScoped<ReserveSeatHandler>();
             services.AddScoped<ConfirmPaymentHandler>();
-            services.AddScoped<GetAvailableSeatsHandler>();
-            services.AddScoped<GetAllSeatsByEventHandler>(); // Nuevo
-            services.AddScoped<GetSectorsByEventHandler>(); // Nuevo
 
             return services;
         }

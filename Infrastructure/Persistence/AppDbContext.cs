@@ -51,6 +51,7 @@ namespace Infrastructure.Persistence
                 .HasIndex(a => a.CreatedAt);
         }
 
+        /*no usamos la parte de auditoria por ahora, pero se deja el codigo comentado para futuras implementaciones
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
@@ -68,5 +69,13 @@ namespace Infrastructure.Persistence
 
             return await base.SaveChangesAsync(cancellationToken);
         }
+        */
+
+        // Este método se puede usar para guardar cambios sin la lógica de auditoría, si se desea mantenerla separada 
+        public async Task<int> SaveChangesAsync()
+        { 
+            return await base.SaveChangesAsync();
+        }
+
     }
 }
