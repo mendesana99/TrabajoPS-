@@ -1,74 +1,73 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <title>Ticket Platform</title>
-    <style>
-        .seat {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            margin: 5px;
-            text-align: center;
-            line-height: 50px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .available {
-            background-color: #10b981;
-            color: white;
-        }
-
-            .available:hover {
-                background-color: #059669;
-            }
-
-        .occupied {
-            background-color: #ef4444;
-            color: white;
-            cursor: not-allowed;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketPlatform | Compra tu entrada</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: Arial; padding: 20px;">
-    <h1>🎵 Concierto de Rock</h1>
-    <div id="seats"></div>
+<body>
+    <div class="background-glow"></div>
+    <div class="overlay-mesh"></div>
 
-    <script>
-        const USER_ID = 1;
+    <header class="glass-nav">
+        <h1 class="logo">Ticket<span>Platform</span></h1>
+        <div class="user-profile">
+            <div class="avatar">👨‍🎤</div>
+            <span>Usuario Juan Pérez (Id: 1)</span>
+        </div>
+    </header>
 
-        async function loadSeats() {
-            const res = await fetch('/api/v1/events/1/seats');
-            const seats = await res.json();
+    <main class="container">
+        <section class="event-info glass-card">
+            <h2 id="event-title">Cargando Evento...</h2>
+            <p id="event-venue" class="venue">Buscando recinto...</p>
+            <p class="instruction">Selecciona tu butaca en el mapa para bloquearla.</p>
+        </section>
 
-            const container = document.getElementById('seats');
-            container.innerHTML = seats.map(seat => `
-                    <div class="seat ${seat.status === 'Available' ? 'available' : 'occupied'}"
-                         onclick="${seat.status === 'Available' ? `reserve('${seat.id}')` : ''}">
-                        ${seat.rowIdentifier}-${seat.seatNumber}
-                    </div>
-                `).join('');
-        }
+        <section class="stadium-container glass-card">
+            <div class="stage">ESCENARIO</div>
+            <div id="seats-map" class="seats-map">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="legend">
+                <div class="legend-item"><div class="seat-badge available"></div> Disponible</div>
+                <div class="legend-item"><div class="seat-badge reserved"></div> Reservado</div>
+                <div class="legend-item"><div class="seat-badge sold"></div> Vendido</div>
+            </div>
+        </section>
+    </main>
 
-        async function reserve(seatId) {
-            const res = await fetch('/api/v1/reservations', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ seatId: seatId, userId: USER_ID })
-            });
+    <!-- Modal de Reserva y Pago -->
+    <div id="payment-modal" class="modal hidden">
+        <div class="modal-content glass-card popup-anim">
+            <h2>¡Butaca Reservada! 🎉</h2>
+            <p>Se ha bloqueado la butaca para ti.</p>
+            <div class="ticket-stub">
+                <div class="stub-row"><span>Asiento:</span> <strong id="modal-seat-info">N/A</strong></div>
+                <div class="stub-row"><span>ID Reserva:</span> <span class="id-text" id="modal-reservation-id">N/A</span></div>
+            </div>
+            
+            <div class="timer-box">
+                <p>El bloqueo expira en:</p>
+                <div id="countdown" class="clock">05:00</div>
+            </div>
 
-            if (res.ok) {
-                alert('✅ Reserva exitosa! Tenés 5 minutos para pagar.');
-                loadSeats();
-            } else if (res.status === 409) {
-                alert('❌ El asiento ya no está disponible');
-                loadSeats();
-            } else {
-                alert('❌ Error en la reserva');
-            }
-        }
+            <button id="btn-pay" class="glow-btn pulse-anim">💰 Confirmar Pago y Comprar</button>
+            <button id="btn-cancel" class="ghost-btn">Cancelar</button>
+        </div>
+    </div>
 
-        loadSeats();
-    </script>
+    <!-- Modal de Éxito Final -->
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-content success-card glass-card">
+            <h2 class="rainbow-text">¡COMPRA EXITOSA!</h2>
+            <p>Disfruta de tu concierto.</p>
+            <button onclick="location.reload()" class="glow-btn">Volver al mapa</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
