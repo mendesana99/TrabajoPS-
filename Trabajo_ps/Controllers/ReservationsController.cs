@@ -1,6 +1,7 @@
-﻿using Application.DTOs;
-using Application.Services;
-using Microsoft.AspNetCore.Http;
+using Application.DTOs;
+using Application.UseCases.Reservations.Commands;
+using Application.UseCases.Reservations.Handlers;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Trabajo_ps.Controllers
@@ -9,11 +10,13 @@ namespace Trabajo_ps.Controllers
     [Route("api/v1/[controller]")]
     public class ReservationsController : ControllerBase
     {
-        private readonly ApplicationTicketService _ticketService;
+        private readonly ReserveSeatHandler _reserveSeatHandler;
+        private readonly ConfirmPaymentHandler _confirmPaymentHandler;
 
-        public ReservationsController(ApplicationTicketService ticketService)
+        public ReservationsController(ReserveSeatHandler reserveSeatHandler, ConfirmPaymentHandler confirmPaymentHandler)
         {
-            _ticketService = ticketService;
+            _reserveSeatHandler = reserveSeatHandler;
+            _confirmPaymentHandler = confirmPaymentHandler;
         }
 
         [HttpPost]
@@ -21,19 +24,17 @@ namespace Trabajo_ps.Controllers
         {
             try
             {
-                var result = await _ticketService.ReserveSeatAsync(request.SeatId, request.UserId);
+                var command = new ReserveSeatCommand(request.SeatId, request.UserId);
+                var result = await _reserveSeatHandler.HandleAsync(command);
                 return Ok(result);
             }
-            catch (InvalidOperationException ex)
+            catch (NoSeatsAvailableException ex)
             {
-                if (ex.Message.Contains("concurrencia") || ex.Message.Contains("disponible"))
-                    return Conflict(new { error = ex.Message });
-
-                return BadRequest(new { error = ex.Message });
+                return Conflict(new { error = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = "Error interno del servidor" });
+                return StatusCode(500, new { error = "Error interno del servidor", details = ex.Message });
             }
         }
 
@@ -42,10 +43,11 @@ namespace Trabajo_ps.Controllers
         {
             try
             {
-                var result = await _ticketService.ConfirmPaymentAsync(request.ReservationId, request.UserId);
+                var command = new ConfirmPaymentCommand(request.ReservationId, request.UserId);
+                var result = await _confirmPaymentHandler.HandleAsync(command);
                 return Ok(new { success = result, message = "Pago confirmado exitosamente" });
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message });
             }

@@ -11,6 +11,4 @@
 *.log
 *.cache
 
-# Archivos generados
-Analisis_Arquitectura.html
-Analisis_Arquitectura.pdf
+

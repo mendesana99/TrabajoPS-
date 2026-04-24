@@ -7,7 +7,7 @@ using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data
+namespace Infrastructure.Persistence
 {
     public static class SeedData
     {
@@ -25,7 +25,7 @@ namespace Infrastructure.Data
                 Name = "Concierto de Rock 2026",
                 EventDate = DateTime.UtcNow.AddDays(30),
                 Venue = "Estadio Monumental",
-                Status = EventStatus.Active
+                Status = "Active"
             };
 
             await context.Events.AddAsync(event1);
@@ -61,7 +61,7 @@ namespace Infrastructure.Data
                     SectorId = sector1.Id,
                     RowIdentifier = $"Fila {((i - 1) / 10) + 1}",
                     SeatNumber = i,
-                    Status = SeatStatus.Available
+                    Status = "Available"
                 });
             }
 
@@ -72,7 +72,7 @@ namespace Infrastructure.Data
                     SectorId = sector2.Id,
                     RowIdentifier = $"Fila {((i - 1) / 10) + 1}",
                     SeatNumber = i,
-                    Status = SeatStatus.Available
+                    Status = "Available"
                 });
             }
 

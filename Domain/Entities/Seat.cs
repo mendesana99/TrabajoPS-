@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,27 +7,18 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Seat : BaseEntity
+    public class Seat
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public int SectorId { get; set; }
         public string RowIdentifier { get; set; } = string.Empty;
         public int SeatNumber { get; set; }
-        public SeatStatus Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
-        [Timestamp]
-        public byte[]? Version { get; set; } // Optimistic concurrency
+        [ConcurrencyCheck]
+        public int Version { get; set; } // Optimistic concurrency
 
         // Navigation properties
         public Sector? Sector { get; set; }
     }
-
-    public enum SeatStatus
-    {
-        Available,
-        Reserved,
-        Sold
-    }
-
-
 }

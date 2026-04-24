@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data
+namespace Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
@@ -26,20 +26,7 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configurar conversiones de enums a strings
-            modelBuilder.Entity<Event>()
-                .Property(e => e.Status)
-                .HasConversion<string>();
-
-            modelBuilder.Entity<Seat>()
-                .Property(s => s.Status)
-                .HasConversion<string>();
-
-            modelBuilder.Entity<Reservation>()
-                .Property(r => r.Status)
-                .HasConversion<string>();
-
-            // Índices para mejorar performance
+            // Indices para mejorar performance
             modelBuilder.Entity<Seat>()
                 .HasIndex(s => s.Status);
 
@@ -55,16 +42,12 @@ namespace Infrastructure.Data
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var entries = ChangeTracker.Entries<BaseEntity>();
+            var entries = ChangeTracker.Entries<AuditLog>();
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                }
-                else if (entry.State == EntityState.Modified)
-                {
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
                 }
             }
 

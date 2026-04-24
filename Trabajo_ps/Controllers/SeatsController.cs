@@ -1,4 +1,5 @@
-using Application.Services;
+using Application.UseCases.Reservations.Handlers;
+using Application.UseCases.Reservations.Commands;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,18 +9,19 @@ namespace Trabajo_ps.Controllers
     [Route("api/v1/[controller]")]
     public class SeatsController : ControllerBase
     {
-        private readonly ApplicationTicketService _ticketService;
+        private readonly ReserveSeatHandler _reserveSeatHandler;
 
-        public SeatsController(ApplicationTicketService ticketService)
+        public SeatsController(ReserveSeatHandler reserveSeatHandler)
         {
-            _ticketService = ticketService;
+            _reserveSeatHandler = reserveSeatHandler;
         }
 
-        [HttpGet("available/{eventId}")]
-        public async Task<IActionResult> GetAvailableSeats(int eventId)
+        [HttpPost("{id}/reserve")]
+        public async Task<IActionResult> ReserveSeat(Guid id, [FromBody] int userId) // O el DTO que corresponda
         {
-            var seats = await _ticketService.GetAvailableSeatsAsync(eventId);
-            return Ok(seats);
+            var command = new ReserveSeatCommand(id, userId);
+            var result = await _reserveSeatHandler.HandleAsync(command);
+            return Ok(result);
         }
     }
 }

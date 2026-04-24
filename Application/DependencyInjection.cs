@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Services;
+using Application.UseCases.Events.Handlers;
+using Application.UseCases.Reservations.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -12,7 +8,12 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<ApplicationTicketService>();
+            services.AddScoped<GetEventsHandler>();
+            services.AddScoped<GetSeatsByEventHandler>();
+            services.AddScoped<GetSectorsByEventHandler>();
+            services.AddScoped<ReserveSeatHandler>();
+            services.AddScoped<ConfirmPaymentHandler>();
+
             return services;
         }
     }

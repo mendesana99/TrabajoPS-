@@ -1,6 +1,6 @@
 using Application;
 using Infrastructure;
-using Infrastructure.Data;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore; //para manejar sql desde c#
 
 // inicia el constructor del servidor web. Es la base de toda la app.
@@ -43,6 +43,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<Trabajo_ps.Middlewares.ExceptionMiddleware>();
+
 app.UseDefaultFiles(); //index
 app.UseStaticFiles(); //app.js , styles.css o img
 app.UseCors("AllowAll"); //activa el guardia de frontera creado 
@@ -50,4 +52,9 @@ app.UseAuthorization(); //agrega capa seguridad
 app.MapControllers(); //conecta rutas web conc controllers en c#
 
 //prende server y espera peticiones
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.Run();

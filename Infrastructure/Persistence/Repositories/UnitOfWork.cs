@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
-using Domain.Interfaces;
-using Infrastructure.Data;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces; 
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -19,19 +19,19 @@ namespace Infrastructure.Repositories
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
-            Events = new Repository<Event>(context) as IRepository<Event>;
-            Sectors = new Repository<Sector>(context) as IRepository<Sector>;
-            Seats = new Repository<Seat>(context) as IRepository<Seat>;
-            Users = new Repository<User>(context) as IRepository<User>;
-            Reservations = new Repository<Reservation>(context) as IRepository<Reservation>;
-            AuditLogs = new Repository<AuditLog>(context) as IRepository<AuditLog>;
+            Events = new EventRepository(context);
+            Sectors = new Repository<Sector>(context);
+            Seats = new SeatRepository(context);
+            Users = new Repository<User>(context);
+            Reservations = new ReservationRepository(context);
+            AuditLogs = new Repository<AuditLog>(context);
         }
 
-        public IRepository<Event> Events { get; }
+        public IEventRepository Events { get; }
         public IRepository<Sector> Sectors { get; }
-        public IRepository<Seat> Seats { get; }
+        public ISeatRepository Seats { get; }
         public IRepository<User> Users { get; }
-        public IRepository<Reservation> Reservations { get; }
+        public IReservationRepository Reservations { get; }
         public IRepository<AuditLog> AuditLogs { get; }
 
         public async Task<int> CompleteAsync()

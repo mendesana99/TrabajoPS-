@@ -1,8 +1,6 @@
-using Application.Mappings;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
+using Application.UseCases.Events.Handlers;
+using Application.UseCases.Events.Queries;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Trabajo_ps.Controllers
 {
@@ -10,30 +8,42 @@ namespace Trabajo_ps.Controllers
     [Route("api/v1/[controller]")]
     public class EventsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly GetEventsHandler _getEventsHandler;
+        private readonly GetSeatsByEventHandler _getSeatsByEventHandler;
+        private readonly GetSectorsByEventHandler _getSectorsByEventHandler;
 
-        public EventsController(AppDbContext context)
+        public EventsController(
+            GetEventsHandler getEventsHandler, 
+            GetSeatsByEventHandler getSeatsByEventHandler,
+            GetSectorsByEventHandler getSectorsByEventHandler)
         {
-            _context = context;
+            _getEventsHandler = getEventsHandler;
+            _getSeatsByEventHandler = getSeatsByEventHandler;
+            _getSectorsByEventHandler = getSectorsByEventHandler;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetEvents()
         {
-            var events = await _context.Events.ToListAsync();
-            return Ok(events);
+            var query = new GetEventsQuery();
+            var result = await _getEventsHandler.HandleAsync(query);
+            return Ok(result);
         }
 
         [HttpGet("{id}/seats")]
         public async Task<IActionResult> GetSeatsByEvent(int id)
         {
-            var seats = await _context.Seats
-                .Include(s => s.Sector)
-                .Where(s => s.Sector != null && s.Sector.EventId == id)
-                .Select(s => s.ToDto())
-                .ToListAsync();
+            var query = new GetSeatsByEventQuery(id);
+            var result = await _getSeatsByEventHandler.HandleAsync(query);
+            return Ok(result);
+        }
 
-            return Ok(seats);
+        [HttpGet("{id}/sectors")]
+        public async Task<IActionResult> GetSectorsByEvent(int id)
+        {
+            var query = new GetSectorsByEventQuery(id);
+            var result = await _getSectorsByEventHandler.HandleAsync(query);
+            return Ok(result);
         }
     }
 }

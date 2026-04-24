@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Interfaces;
-using Infrastructure.BackgroundJobs;
-using Infrastructure.Data;
-using Infrastructure.Repositories;
-using Infrastructure.Services;
+
+using Infrastructure.Persistence;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
 
 namespace Infrastructure
 {
@@ -26,12 +20,11 @@ namespace Infrastructure
 
             // Repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<ISeatRepository, SeatRepository>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            // Services
-            services.AddScoped<ITicketService, TicketService>();
-
-            // Background services
-            services.AddHostedService<ExpiredReservationWorker>();
 
             return services;
         }
