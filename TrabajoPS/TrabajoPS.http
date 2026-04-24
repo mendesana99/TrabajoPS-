@@ -1,6 +1,0 @@
-@TrabajoPS_HostAddress = http://localhost:5110
-
-GET {{TrabajoPS_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
