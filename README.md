@@ -12,6 +12,8 @@ Plataforma de venta de entradas robusta que garantiza la integridad de los datos
 - [.NET SDK](https://dotnet.microsoft.com/download) instalado en tu equipo.
 - Visual Studio o Visual Studio Code.
 - SQL Server Express / LocalDB (usualmente incluido con Visual Studio).
+  
+**Nota:** Podria ocurrir al ejecutar proyecto, si se tienen tablas previamente generadas, que no termine de compilarse. Borrando las tablas preexistentes se soluciona esto.
 
 ## Pasos para ejecutar el proyecto
 
