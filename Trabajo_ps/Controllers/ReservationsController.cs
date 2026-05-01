@@ -26,7 +26,8 @@ namespace Trabajo_ps.Controllers
             {
                 var command = new ReserveSeatCommand(request.SeatId, request.UserId);
                 var result = await _reserveSeatHandler.HandleAsync(command);
-                return Ok(result);
+                return Created("Created",result);
+                //return Ok(result);
             }
             catch (NoSeatsAvailableException ex)
             {

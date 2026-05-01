@@ -35,6 +35,11 @@ namespace Trabajo_ps.Controllers
         {
             var query = new GetSeatsByEventQuery(id);
             var result = await _getSeatsByEventHandler.HandleAsync(query);
+            if (result == null || !result.Any())
+            {
+                return NotFound();
+            }
+
             return Ok(result);
         }
 
@@ -43,6 +48,10 @@ namespace Trabajo_ps.Controllers
         {
             var query = new GetSectorsByEventQuery(id);
             var result = await _getSectorsByEventHandler.HandleAsync(query);
+            if (result == null || !result.Any())
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
     }
