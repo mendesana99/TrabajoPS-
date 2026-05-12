@@ -15,6 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(); //carga servicios con application
 builder.Services.AddInfrastructure(builder.Configuration); //lee las pass/links de bd
 
+// Background Service para liberar reservas vencidas
+builder.Services.AddHostedService<Trabajo_ps.BackgroundServices.ReservationCleanupService>();
+
 // CORS para el frontend - permite que navegadores consulten la api
 builder.Services.AddCors(options =>
 {
