@@ -1,62 +1,55 @@
-# TicketPlatform - Proyecto de Software
+# Ticketing Platform - Proyecto de Software 🎫
 
-Plataforma de venta de entradas robusta que garantiza la integridad de los datos bajo alta demanda. Desarrollado aplicando principios de Clean Architecture y REST.
+Sistema robusto de reserva y venta de entradas con gestión de alta concurrencia, transacciones ACID y procesos asíncronos.
 
-## Tecnologías Utilizadas
-- **Backend:** C# (.NET Core), Entity Framework Core (Code-First)
-- **Base de Datos:** LocalDB / SQL Server (configurado en `appsettings.json`)
-- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
-- **Arquitectura:** Clean Architecture, CQRS, Patrón Unit of Work, Repository Pattern.
+## 🚀 Características Principales
 
-## Requisitos Previos
-- [.NET SDK](https://dotnet.microsoft.com/download) instalado en tu equipo.
-- Visual Studio o Visual Studio Code.
-- SQL Server Express / LocalDB (usualmente incluido con Visual Studio).
-  
-**Nota:** Podria ocurrir al ejecutar proyecto, si se tienen tablas previamente generadas, que no termine de compilarse. Borrando las tablas preexistentes se soluciona esto.
+- **Arquitectura Limpia (Clean Architecture):** Separación estricta de responsabilidades en capas (Domain, Application, Infrastructure, Web API).
+- **Control de Concurrencia:** Implementación de *Optimistic Locking* mediante campos de versión para evitar la doble reserva de butacas.
+- **Transaccionalidad ACID:** Operaciones críticas (reserva y pago) envueltas en transacciones para asegurar la integridad de los datos.
+- **Procesos en Segundo Plano:** Background Service encargado de la liberación automática de reservas vencidas (5 minutos).
+- **Auditoría Completa:** Registro inmutable de cada acción (intentos exitosos, fallidos, pagos y liberaciones).
+- **API RESTful:** Cumplimiento de estándares de industria (sustantivos plurales, códigos HTTP correctos, versionado v1).
+- **Frontend Dinámico:** Interfaz moderna con catálogo de eventos, mapa de asientos interactivo, temporizadores y notificaciones en tiempo real.
 
-## Pasos para ejecutar el proyecto
+## 🛠️ Tecnologías Utilizadas
 
-### 1. Compilar el proyecto
-Abre una terminal en la carpeta raíz del proyecto (`Trabajo_ps`) y restaura los paquetes/compila:
+- **Backend:** .NET 8, Entity Framework Core 8, SQL Server.
+- **Frontend:** HTML5, CSS3 (Vanilla), JavaScript (Fetch API).
+- **Documentación:** Swagger / OpenAPI.
+
+## 📦 Instalación y Configuración
+
+### Pre-requisitos
+- .NET 8 SDK
+- SQL Server (LocalDB o instancia superior)
+
+### 1. Configuración de la Base de Datos
+Desde la raíz del proyecto, ejecuta los siguientes comandos para aplicar las migraciones y crear la base de datos:
+
 ```bash
-dotnet build
-```
-
-### 2. Configurar y Levantar la Base de Datos
-El proyecto utiliza **Entity Framework Core (Code-First)**. La creación de la base de datos y la carga de datos iniciales (1 Evento, 2 Sectores, 100 Butacas, 1 Usuario) se ejecutan automáticamente al iniciar la aplicación por primera vez gracias al archivo `SeedData.cs`.
-
-Si de todas formas deseas aplicar las migraciones manualmente, puedes correr:
-```bash
-cd Infrastructure
-dotnet ef database update --startup-project ../Trabajo_ps
-```
-*(Asegúrate de tener instaladas las herramientas de ef core: `dotnet tool install --global dotnet-ef`)*
-
-### 3. Lanzar la Aplicación
-Navega a la carpeta principal del proyecto Web API (`Trabajo_ps` que contiene el archivo `Program.cs`) y ejecuta:
-```bash
+# Navegar a la carpeta del proyecto API
 cd Trabajo_ps
+
+# Ejecutar migraciones (se crearán automáticamente los datos de prueba / Seed)
+dotnet ef database update --project ../Infrastructure --startup-project .
+```
+
+### 2. Ejecutar el Backend
+```bash
 dotnet run
 ```
+La API estará disponible en `http://localhost:5000` y la documentación interactiva en `http://localhost:5000/swagger`.
 
-### 4. Acceder a la Interfaz y a la API
-Una vez que la consola indique que la aplicación está escuchando peticiones (usualmente en el puerto 5000 o 5001):
-- **Frontend (UI de Venta):** Abre tu navegador e ingresa a `http://localhost:5000/index.html` (o en su defecto `https://localhost:5001/index.html`).
-- **Documentación de la API (Swagger):** Abre tu navegador e ingresa a `http://localhost:5000/swagger` para ver todos los endpoints disponibles.
+### 3. Ejecutar el Frontend
+El frontend es independiente del backend. Puedes abrir el archivo `Frontend/index.html` directamente en tu navegador o utilizar un servidor estático (ej: Live Server en VS Code).
+
+Asegúrate de que la API esté corriendo para que el frontend pueda consumir los datos.
+
+## 📝 Auditoría y Trazabilidad
+El sistema registra cada milisegundo de actividad en la tabla `AuditLogs`. Puedes consultar esta tabla para verificar la resolución de conflictos de concurrencia y la liberación automática de asientos.
 
 ---
-
-## Detalle de Funcionalidades Implementadas (Entrega 1 y Entrega 2)
-### Entrega 1: Fundamentos y Reserva Inicial
-- **Modelo de Base de Datos:** Entidades configuradas (Events, Sectors, Seats, Users, Reservations, AuditLogs).
-- **Code-First & Migrations:** Generado con EF Core. Precarga inicial con `SeedData.cs`.
-- **API RESTful:** Jerarquías plurales correctas (`GET /api/v1/Events/{id}/seats`). Uso de códigos HTTP correctos (`200 OK`, `400 Bad Request`).
-- **Frontend y UX:** La interfaz asíncrona (Vanilla JS) permite visualizar el catálogo y el mapa de asientos, distinguiendo visualmente las butacas.
-
-### Entrega 2: Alta Concurrencia, Transacciones y Procesos Asíncronos
-- **Optimistic Locking (Control de Concurrencia):** Las butacas incluyen un campo `Version` (`[ConcurrencyCheck]`) para evitar doble asignación. Devuelve un `409 Conflict` adecuadamente.
-- **Transaccionalidad Estricta (ACID):** Se utiliza `IUnitOfWork` (BeginTransaction, Commit, Rollback) durante la confirmación del pago para garantizar atomicidad entre el estado de butaca, reserva y auditoría.
-- **Liberación Automática (Background Job):** Se implementó un `ReservationCleanupService` (Worker/Cron) que corre en segundo plano y libera automáticamente las reservas con más de 5 minutos de antigüedad sin pagar.
-- **Temporizador y UX:** Frontend implementa cuenta regresiva visual y notifica instantáneamente cuando hay conflictos de concurrencia refrescando el mapa.
-- **Auditoría y Trazabilidad:** Se genera un registro inmutable en `AuditLogs` en cada intento exitoso o fallido de reserva, pago y expiración automática con detalles precisos.
+**Cátedra:** Proyecto de Software  
+**Docente:** Ing. Olivera Lucas  
+**Grupo:** 10 (Mendes Ana, Condori Edson)

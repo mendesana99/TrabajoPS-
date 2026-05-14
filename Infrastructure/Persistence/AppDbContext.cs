@@ -64,6 +64,10 @@ namespace Infrastructure.Persistence
                 .Property(s => s.Status)
                 .HasMaxLength(50);
 
+            modelBuilder.Entity<Seat>()
+                .Property(s => s.Version)
+                .IsConcurrencyToken();
+
             modelBuilder.Entity<User>()
                 .Property(u => u.Name)
                 .HasMaxLength(200);
