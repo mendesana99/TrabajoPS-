@@ -3,71 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TicketPlatform | Compra tu entrada</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>TicketPlatform | Compra Segura</title>
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
-    <div class="background-glow"></div>
-    <div class="overlay-mesh"></div>
 
-    <header class="glass-nav">
-        <h1 class="logo">Ticket<span>Platform</span></h1>
-        <div class="user-profile">
-            <div class="avatar">👨‍🎤</div>
-            <span>Usuario Juan Pérez (Id: 1)</span>
+    <header>
+        <div class="logo">Ticket<span>Platform</span></div>
+        <div class="user-profile hidden" id="user-profile">
+            <div class="avatar" id="user-avatar">👤</div>
+            <span id="user-name">...</span>
+            <button class="btn-logout" id="btn-logout">Salir</button>
         </div>
     </header>
 
-    <main class="container">
-        <section class="event-info glass-card">
-            <h2 id="event-title">Cargando Evento...</h2>
-            <p id="event-venue" class="venue">Buscando recinto...</p>
-            <p class="instruction">Selecciona tu butaca en el mapa para bloquearla.</p>
+    <main>
+        <section class="glass-panel event-info">
+            <div class="event-tag">Tour 2026</div>
+            <h2 id="event-title">Cargando...</h2>
+            <p>📍 <span id="event-venue">...</span></p>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box available"></div>
+                    <span>Disponible</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box reserved"></div>
+                    <span>Reservada (Procesando)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box sold"></div>
+                    <span>Vendida</span>
+                </div>
+            </div>
         </section>
 
-        <section class="stadium-container glass-card">
-            <div class="stage">ESCENARIO</div>
+        <section class="glass-panel seats-area">
+            <div class="stage">ESCENARIO PRINCIPAL</div>
             <div id="seats-map" class="seats-map">
-                <!-- Se llenará dinámicamente -->
-            </div>
-            <div class="legend">
-                <div class="legend-item"><div class="seat-badge available"></div> Disponible</div>
-                <div class="legend-item"><div class="seat-badge reserved"></div> Reservado</div>
-                <div class="legend-item"><div class="seat-badge sold"></div> Vendido</div>
+                <!-- Javascript injects seats here -->
             </div>
         </section>
     </main>
 
-    <!-- Modal de Reserva y Pago -->
-    <div id="payment-modal" class="modal hidden">
-        <div class="modal-content glass-card popup-anim">
-            <h2>¡Butaca Reservada! 🎉</h2>
-            <p>Se ha bloqueado la butaca para ti.</p>
-            <div class="ticket-stub">
-                <div class="stub-row"><span>Asiento:</span> <strong id="modal-seat-info">N/A</strong></div>
-                <div class="stub-row"><span>ID Reserva:</span> <span class="id-text" id="modal-reservation-id">N/A</span></div>
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bienvenido de nuevo</h3>
+                <p>Ingresá tus datos para comprar</p>
+            </div>
+            <div class="input-group">
+                <label>Correo Electrónico</label>
+                <input type="email" id="login-email" class="input-field" placeholder="ej: juan@example.com" value="juan@example.com">
+            </div>
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" id="login-password" class="input-field" placeholder="••••••" value="123456">
+            </div>
+            <div class="error-msg" id="login-error">Credenciales incorrectas. Intenta de nuevo.</div>
+            <button id="btn-login" class="btn btn-primary" style="margin-top: 1rem;">Ingresar a mi cuenta</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Completá tu pago</h3>
+                <p>Tu asiento está reservado temporalmente.</p>
             </div>
             
             <div class="timer-box">
-                <p>El bloqueo expira en:</p>
-                <div id="countdown" class="clock">05:00</div>
+                <div class="timer-label">Tiempo restante para pagar</div>
+                <div id="countdown" class="timer-value">05:00</div>
             </div>
 
-            <button id="btn-pay" class="glow-btn pulse-anim">💰 Confirmar Pago y Comprar</button>
-            <button id="btn-cancel" class="ghost-btn">Cancelar</button>
+            <div class="checkout-details">
+                <div class="detail-row">
+                    <span>Butaca:</span>
+                    <strong id="modal-seat-info">...</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Reserva ID:</span>
+                    <span id="modal-reservation-id" style="font-size: 0.8rem; opacity: 0.6;">...</span>
+                </div>
+            </div>
+
+            <button id="btn-pay" class="btn btn-primary">Pagar y Confirmar</button>
+            <button id="btn-cancel" class="btn btn-outline">Cancelar y liberar asiento</button>
         </div>
     </div>
 
-    <!-- Modal de Éxito Final -->
-    <div id="success-modal" class="modal hidden">
-        <div class="modal-content success-card glass-card">
-            <h2 class="rainbow-text">¡COMPRA EXITOSA!</h2>
-            <p>Disfruta de tu concierto.</p>
-            <button onclick="location.reload()" class="glow-btn">Volver al mapa</button>
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center;">
+            <div class="success-icon">✓</div>
+            <h3 style="font-family: 'Outfit'; font-size: 2rem; margin-bottom: 1rem;">¡Pago Exitoso!</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Tu entrada ya está asegurada. Te enviamos los detalles a tu correo electrónico.</p>
+            <button onclick="location.reload()" class="btn btn-primary">Volver al inicio</button>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=3"></script>
 </body>
 </html>
