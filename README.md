@@ -47,12 +47,16 @@ Una vez que la consola indique que la aplicación está escuchando peticiones (u
 
 ---
 
-## Detalle de Funcionalidades Implementadas (Entrega 1)
+## Detalle de Funcionalidades Implementadas (Entrega 1 y Entrega 2)
+### Entrega 1: Fundamentos y Reserva Inicial
 - **Modelo de Base de Datos:** Entidades configuradas (Events, Sectors, Seats, Users, Reservations, AuditLogs).
-- **Code-First & Migrations:** Generado con EF Core.
-- **Optimistic Locking:** Las butacas incluyen un campo `Version` (`[ConcurrencyCheck]`) para garantizar la integridad frente a la alta concurrencia.
-- **Auditoría:** Se genera un registro inmutable en `AuditLogs` cada vez que se bloquea un asiento.
-- **Transaccionalidad (ACID):** Se utiliza `IUnitOfWork` (BeginTransaction, Commit, Rollback).
-- **API RESTful:** Jerarquías plurales correctas (`GET /api/v1/Events/{id}/seats` y `GET /api/v1/Events/{id}/sectors`). Uso de códigos HTTP correctos (`200 OK`, `400 Bad Request`, `409 Conflict`).
-- **Frontend Asíncrono:** La interfaz consulta la API mediante `Fetch API` y actualiza la vista de forma reactiva (sin recargar la página), mostrando el mapa y sus estados (Disponible, Reservado, Vendido).
-- **Manejo de UI y UX:** Al hacer clic en un asiento disponible, se efectúa la reserva, la UI muestra un modal con un temporizador de 5 minutos, y refleja alertas al usuario.
+- **Code-First & Migrations:** Generado con EF Core. Precarga inicial con `SeedData.cs`.
+- **API RESTful:** Jerarquías plurales correctas (`GET /api/v1/Events/{id}/seats`). Uso de códigos HTTP correctos (`200 OK`, `400 Bad Request`).
+- **Frontend y UX:** La interfaz asíncrona (Vanilla JS) permite visualizar el catálogo y el mapa de asientos, distinguiendo visualmente las butacas.
+
+### Entrega 2: Alta Concurrencia, Transacciones y Procesos Asíncronos
+- **Optimistic Locking (Control de Concurrencia):** Las butacas incluyen un campo `Version` (`[ConcurrencyCheck]`) para evitar doble asignación. Devuelve un `409 Conflict` adecuadamente.
+- **Transaccionalidad Estricta (ACID):** Se utiliza `IUnitOfWork` (BeginTransaction, Commit, Rollback) durante la confirmación del pago para garantizar atomicidad entre el estado de butaca, reserva y auditoría.
+- **Liberación Automática (Background Job):** Se implementó un `ReservationCleanupService` (Worker/Cron) que corre en segundo plano y libera automáticamente las reservas con más de 5 minutos de antigüedad sin pagar.
+- **Temporizador y UX:** Frontend implementa cuenta regresiva visual y notifica instantáneamente cuando hay conflictos de concurrencia refrescando el mapa.
+- **Auditoría y Trazabilidad:** Se genera un registro inmutable en `AuditLogs` en cada intento exitoso o fallido de reserva, pago y expiración automática con detalles precisos.
