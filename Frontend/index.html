@@ -18,7 +18,14 @@
     </header>
 
     <main>
-        <section class="glass-panel event-info">
+        <section id="events-list-section" class="glass-panel" style="margin-bottom: 2rem;">
+            <h2>Próximos Eventos</h2>
+            <div id="events-list" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                <!-- Event cards will be injected here -->
+            </div>
+        </section>
+
+        <section id="event-details-section" class="glass-panel event-info hidden" style="display: none;">
             <div class="event-tag">Tour 2026</div>
             <h2 id="event-title">Cargando...</h2>
             <p>📍 <span id="event-venue">...</span></p>
@@ -39,7 +46,7 @@
             </div>
         </section>
 
-        <section class="glass-panel seats-area">
+        <section id="seats-area-section" class="glass-panel seats-area hidden" style="display: none;">
             <div class="stage">ESCENARIO PRINCIPAL</div>
             <div id="seats-map" class="seats-map">
                 <!-- Javascript injects seats here -->

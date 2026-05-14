@@ -78,25 +78,80 @@ btnLogout.onclick = () => {
     location.reload();
 };
 
+// Notification System
+function showNotification(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Add simple inline style for the toast since it wasn't in CSS
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.padding = '15px 25px';
+    toast.style.borderRadius = '8px';
+    toast.style.color = 'white';
+    toast.style.fontWeight = 'bold';
+    toast.style.zIndex = '9999';
+    toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    toast.style.transition = 'opacity 0.3s ease';
+    
+    if(type === 'error') toast.style.background = '#e74c3c';
+    else if(type === 'success') toast.style.background = '#2ecc71';
+    else toast.style.background = '#3498db';
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
 // 3. Load Data
 async function loadEventDetails() {
     try {
         const response = await fetch(`${API_BASE}/Events`);
-        const events = await response.json();
+        const result = await response.json();
+        const events = result.data || result; // Fallback in case backend doesn't return PaginatedResult for some reason
+        
+        const eventsListEl = document.getElementById('events-list');
+        eventsListEl.innerHTML = '';
         
         if (events && events.length > 0) {
-            const event = events[0];
-            currentEventId = event.id;
-            elEventTitle.textContent = event.name;
-            elEventVenue.textContent = event.venue;
-            await loadSeatsMap();
+            events.forEach(event => {
+                const card = document.createElement('div');
+                card.style.border = '1px solid var(--border-color)';
+                card.style.padding = '1rem';
+                card.style.borderRadius = '8px';
+                card.style.cursor = 'pointer';
+                card.style.background = 'var(--panel-bg)';
+                card.style.minWidth = '200px';
+                card.innerHTML = `
+                    <h3>${event.name}</h3>
+                    <p>📍 ${event.venue}</p>
+                    <small>📅 ${new Date(event.eventDate).toLocaleDateString()}</small>
+                `;
+                card.onclick = () => selectEvent(event);
+                eventsListEl.appendChild(card);
+            });
         } else {
-            elEventTitle.textContent = 'No hay eventos activos';
+            eventsListEl.innerHTML = '<p>No hay eventos activos.</p>';
         }
     } catch (error) {
-        console.error('Error cargando evento:', error);
-        elEventTitle.textContent = 'Error de conexión';
+        console.error('Error cargando eventos:', error);
+        document.getElementById('events-list').innerHTML = '<p>Error de conexión al cargar eventos.</p>';
     }
+}
+
+async function selectEvent(event) {
+    currentEventId = event.id;
+    elEventTitle.textContent = event.name;
+    elEventVenue.textContent = event.venue;
+    
+    document.getElementById('event-details-section').style.display = 'block';
+    document.getElementById('seats-area-section').style.display = 'block';
+    
+    await loadSeatsMap();
 }
 
 async function loadSeatsMap() {
@@ -109,6 +164,7 @@ async function loadSeatsMap() {
         seats.forEach(seat => {
             const btn = document.createElement('div');
             btn.className = `seat ${seat.status.toLowerCase()}`;
+            btn.id = `seat-${seat.id}`;
             btn.innerHTML = `<strong>${seat.rowIdentifier}</strong><span>${seat.seatNumber}</span>`;
             
             if (seat.status === 'Available') {
@@ -136,25 +192,36 @@ async function initiateReservation(seatId, row, number) {
         });
         
         if (response.status === 409) {
-            alert('¡Ups! Alguien más reservó este asiento una fracción de segundo antes que tú.');
-            loadSeatsMap();
+            showNotification('¡Ups! Alguien más reservó este asiento una fracción de segundo antes que tú.', 'error');
+            const btn = document.getElementById(`seat-${seatId}`);
+            if (btn) {
+                btn.className = 'seat reserved';
+                btn.onclick = null;
+            }
             return;
         }
 
         if (!response.ok) throw new Error('Error en reserva');
 
         const result = await response.json();
-        currentReservationId = result.reservationId;
+        currentReservationId = result.reservationId || result.id;
         
         elModalSeatInfo.textContent = `${row} - Asiento ${number}`;
         elModalResId.textContent = currentReservationId;
         
         modalPayment.classList.add('active');
+        
+        // Optimistic UI update
+        const btn = document.getElementById(`seat-${seatId}`);
+        if (btn) {
+            btn.className = 'seat reserved';
+            btn.onclick = null;
+        }
+
         startCountdown(new Date(result.expiresAt));
-        loadSeatsMap();
         
     } catch (error) {
-        alert('Ocurrió un error al reservar el asiento.');
+        showNotification('Ocurrió un error al reservar el asiento.', 'error');
     }
 }
 
@@ -169,9 +236,9 @@ function startCountdown(expiresAt) {
         if (diff <= 0) {
             clearInterval(countdownInterval);
             elCountdown.textContent = '00:00';
-            alert('¡Tiempo excedido! Tu reserva ha sido liberada.');
+            showNotification('¡Tiempo excedido! Tu reserva ha sido liberada.', 'error');
             closeModal();
-            loadSeatsMap();
+            loadSeatsMap(); // Here we reload all since we don't track the exact seat id in the timer to revert it
             return;
         }
         
@@ -190,10 +257,10 @@ btnPay.onclick = async () => {
     btnPay.disabled = true;
     
     try {
-        const response = await fetch(`${API_BASE}/Reservations/confirm-payment`, {
+        const response = await fetch(`${API_BASE}/Reservations/${currentReservationId}/payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reservationId: currentReservationId, userId: USER_ID })
+            body: JSON.stringify({ userId: USER_ID })
         });
         
         if (!response.ok) throw new Error('Error en pago');
@@ -203,7 +270,7 @@ btnPay.onclick = async () => {
         modalSuccess.classList.add('active');
         
     } catch (error) {
-        alert(error.message);
+        showNotification(error.message, 'error');
         btnPay.textContent = 'Pagar y Confirmar';
         btnPay.disabled = false;
     }

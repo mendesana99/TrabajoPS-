@@ -9,8 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Agregar servicios al contenedor - get, post, urls, swagger.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+});
 // Configurar Inyección de Dependencias
 builder.Services.AddApplication(); //carga servicios con application
 builder.Services.AddInfrastructure(builder.Configuration); //lee las pass/links de bd
@@ -48,8 +55,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<Trabajo_ps.Middlewares.ExceptionMiddleware>();
 
-app.UseDefaultFiles(); //index
-app.UseStaticFiles(); //app.js , styles.css o img
+// app.UseDefaultFiles(); // index
+// app.UseStaticFiles(); // app.js , styles.css o img
 app.UseCors("AllowAll"); //activa el guardia de frontera creado 
 app.UseAuthorization(); //agrega capa seguridad
 app.MapControllers(); //conecta rutas web conc controllers en c#

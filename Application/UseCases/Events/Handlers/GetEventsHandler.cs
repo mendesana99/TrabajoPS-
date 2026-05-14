@@ -16,18 +16,30 @@ namespace Application.UseCases.Events.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<EventResponse>> HandleAsync(GetEventsQuery query)
+        public async Task<PaginatedResult<EventResponse>> HandleAsync(GetEventsQuery query)
         {
             var events = await _unitOfWork.Events.GetAllAsync();
             
-            return events.Select(e => new EventResponse
+            var total = events.Count();
+            var paginatedEvents = events
+                .Skip((query.Page - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .Select(e => new EventResponse
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Venue = e.Venue,
+                    EventDate = e.EventDate,
+                    Status = e.Status
+                });
+
+            return new PaginatedResult<EventResponse>
             {
-                Id = e.Id,
-                Name = e.Name,
-                Venue = e.Venue,
-                EventDate = e.EventDate,
-                Status = e.Status
-            });
+                Data = paginatedEvents,
+                Total = total,
+                Page = query.Page,
+                PageSize = query.PageSize
+            };
         }
     }
 }

@@ -18,8 +18,7 @@ namespace Application.UseCases.Events.Handlers
 
         public async Task<IEnumerable<SeatDto>> HandleAsync(GetSeatsByEventQuery query)
         {
-            var seats = await _unitOfWork.Seats
-                .FindAsync(s => s.Sector != null && s.Sector.EventId == query.EventId);
+            var seats = await _unitOfWork.Seats.GetSeatsWithSectorByEventIdAsync(query.EventId);
                 
             return seats.Select(s => new SeatDto
             {

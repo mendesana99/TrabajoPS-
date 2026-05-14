@@ -36,7 +36,14 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<int> CompleteAsync()
         {
-            return await _context.SaveChangesAsync();
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new Domain.Exceptions.ConcurrencyException("Un conflicto de concurrencia ocurrió. " + ex.Message);
+            }
         }
 
         public async Task BeginTransactionAsync()
@@ -54,6 +61,11 @@ namespace Infrastructure.Persistence.Repositories
         {
             if (_transaction != null)
                 await _transaction.RollbackAsync();
+        }
+
+        public void ClearChanges()
+        {
+            _context.ChangeTracker.Clear();
         }
 
         public void Dispose()

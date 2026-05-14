@@ -7,8 +7,6 @@ using Application.UseCases.Reservations.Commands;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
-using Microsoft.EntityFrameworkCore;
-
 namespace Application.UseCases.Reservations.Handlers
 {
     public class ReserveSeatHandler
@@ -29,7 +27,7 @@ namespace Application.UseCases.Reservations.Handlers
                 // 1. Obtener el asiento
                 var seat = await _unitOfWork.Seats.GetByIdAsync(command.SeatId);
                 if (seat == null)
-                    throw new Exception("El asiento no existe");
+                    throw new NotFoundException("El asiento no existe");
 
                 // 2. Verificar disponibilidad
                 if (seat.Status != "Available")
@@ -79,16 +77,45 @@ namespace Application.UseCases.Reservations.Handlers
                     Message = "Asiento reservado exitosamente. Tenés 5 minutos para completar el pago."
                 };
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ConcurrencyException)
             {
                 await _unitOfWork.RollbackTransactionAsync();
+                await WriteAuditLogAsync(command.UserId, "RESERVE_FAILED", command.SeatId.ToString(), "Conflicto de concurrencia");
                 throw new NoSeatsAvailableException("El asiento fue reservado por otro usuario en este instante.");
             }
-            catch (Exception)
+            catch (NotFoundException ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
+                await WriteAuditLogAsync(command.UserId, "RESERVE_FAILED", command.SeatId.ToString(), ex.Message);
                 throw;
             }
+            catch (NoSeatsAvailableException ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                await WriteAuditLogAsync(command.UserId, "RESERVE_FAILED", command.SeatId.ToString(), ex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                await WriteAuditLogAsync(command.UserId, "RESERVE_FAILED", command.SeatId.ToString(), ex.Message);
+                throw;
+            }
+        }
+
+        private async Task WriteAuditLogAsync(int userId, string action, string entityId, string reason)
+        {
+            _unitOfWork.ClearChanges();
+            var audit = new AuditLog
+            {
+                UserId = userId,
+                Action = action,
+                EntityType = nameof(Seat),
+                EntityId = entityId,
+                Details = $"{{\"reason\":\"{reason}\"}}"
+            };
+            await _unitOfWork.AuditLogs.AddAsync(audit);
+            await _unitOfWork.CompleteAsync();
         }
     }
 }
