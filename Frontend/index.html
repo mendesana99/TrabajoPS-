@@ -3,116 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TicketPlatform | Compra Segura</title>
-    <link rel="stylesheet" href="styles.css?v=3">
+    <title>TicketPlatform | Premium Entertainment</title>
+    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
+    <div id="toast-container" class="toast-container"></div>
 
     <header>
         <div class="logo">Ticket<span>Platform</span></div>
         <div class="user-profile hidden" id="user-profile">
-            <div class="avatar" id="user-avatar">👤</div>
-            <span id="user-name">...</span>
-            <button class="btn-logout" id="btn-logout">Salir</button>
+            <div class="avatar" id="user-avatar">M</div>
+            <span id="user-name">Usuario</span>
+            <button class="btn-logout" id="btn-logout"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </header>
 
-    <main>
-        <section id="events-list-section" class="glass-panel" style="margin-bottom: 2rem;">
-            <h2>Próximos Eventos</h2>
-            <div id="events-list" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
-                <!-- Event cards will be injected here -->
-            </div>
-        </section>
-
-        <section id="event-details-section" class="glass-panel event-info hidden" style="display: none;">
-            <div class="event-tag">Tour 2026</div>
-            <h2 id="event-title">Cargando...</h2>
-            <p>📍 <span id="event-venue">...</span></p>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-box available"></div>
-                    <span>Disponible</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-box reserved"></div>
-                    <span>Reservada (Procesando)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-box sold"></div>
-                    <span>Vendida</span>
-                </div>
-            </div>
-        </section>
-
-        <section id="seats-area-section" class="glass-panel seats-area hidden" style="display: none;">
-            <div class="stage">ESCENARIO PRINCIPAL</div>
-            <div id="seats-map" class="seats-map">
-                <!-- Javascript injects seats here -->
-            </div>
-        </section>
-    </main>
-
-    <!-- Login Modal -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Bienvenido de nuevo</h3>
-                <p>Ingresá tus datos para comprar</p>
-            </div>
-            <div class="input-group">
-                <label>Correo Electrónico</label>
-                <input type="email" id="login-email" class="input-field" placeholder="ej: juan@example.com" value="juan@example.com">
-            </div>
-            <div class="input-group">
-                <label>Contraseña</label>
-                <input type="password" id="login-password" class="input-field" placeholder="••••••" value="123456">
-            </div>
-            <div class="error-msg" id="login-error">Credenciales incorrectas. Intenta de nuevo.</div>
-            <button id="btn-login" class="btn btn-primary" style="margin-top: 1rem;">Ingresar a mi cuenta</button>
+    <div id="hero-section" class="hero-section">
+        <div class="hero-content">
+            <div class="event-tag">Destacado</div>
+            <h1>Experiencias que Duran para Siempre</h1>
+            <p>Reserva tus lugares en los mejores eventos del mundo con seguridad y rapidez.</p>
         </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div id="payment-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Completá tu pago</h3>
-                <p>Tu asiento está reservado temporalmente.</p>
+    <main id="main-container">
+        <!-- Catalog View -->
+        <div id="catalog-view" class="view-container">
+            <div class="section-header">
+                <h2>Próximos Eventos</h2>
+                <div class="filter-pills">
+                    <span class="pill active">Todos</span>
+                    <span class="pill">Conciertos</span>
+                    <span class="pill">Deportes</span>
+                    <span class="pill">Teatro</span>
+                </div>
+            </div>
+            <div id="events-list" class="events-grid">
+                <!-- Event cards injected here -->
+            </div>
+        </div>
+
+        <!-- Selection View (Hidden by default) -->
+        <div id="selection-view" class="view-container hidden">
+            <div class="back-nav">
+                <button onclick="showCatalog()" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al Catálogo</button>
             </div>
             
-            <div class="timer-box">
-                <div class="timer-label">Tiempo restante para pagar</div>
+            <div class="selection-layout">
+                <aside class="event-sidebar glass-panel">
+                    <div class="event-poster-mini" id="mini-poster"></div>
+                    <div class="event-details-mini">
+                        <div class="event-tag" id="event-tag-detail">Tour 2026</div>
+                        <h2 id="event-title">Cargando...</h2>
+                        <p><i class="fas fa-map-marker-alt"></i> <span id="event-venue">...</span></p>
+                        <p><i class="fas fa-calendar-alt"></i> 15 de Mayo, 2026</p>
+                    </div>
+
+                    <div class="legend">
+                        <h3>Referencia de Asientos</h3>
+                        <div class="legend-item">
+                            <div class="legend-box available"></div>
+                            <span>Disponible</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box reserved"></div>
+                            <span>Reservado</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box sold"></div>
+                            <span>Vendido</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <section class="seats-container glass-panel">
+                    <div class="stage-container">
+                        <div class="stage">ESCENARIO</div>
+                    </div>
+                    <div id="seats-map" class="seats-map">
+                        <!-- Seats injected here -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay active">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bienvenido</h3>
+                <p>Ingresa para comenzar tu reserva</p>
+            </div>
+            <div class="input-group">
+                <label>Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" class="input-field" value="juan@example.com">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" class="input-field" value="123456">
+                </div>
+            </div>
+            <div class="error-msg" id="login-error">Credenciales incorrectas</div>
+            <button id="btn-login" class="btn btn-primary">Iniciar Sesión</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Confirmar Reserva</h3>
+                <p>Completa el pago antes de que expire el tiempo.</p>
+            </div>
+            
+            <div class="timer-display">
+                <div class="timer-label">Tu reserva expira en:</div>
                 <div id="countdown" class="timer-value">05:00</div>
             </div>
 
-            <div class="checkout-details">
-                <div class="detail-row">
-                    <span>Butaca:</span>
+            <div class="checkout-card">
+                <div class="checkout-row">
+                    <span>Evento:</span>
+                    <strong id="checkout-event-name">...</strong>
+                </div>
+                <div class="checkout-row">
+                    <span>Ubicación:</span>
                     <strong id="modal-seat-info">...</strong>
                 </div>
-                <div class="detail-row">
-                    <span>Reserva ID:</span>
-                    <span id="modal-reservation-id" style="font-size: 0.8rem; opacity: 0.6;">...</span>
+                <div class="checkout-row total">
+                    <span>Total a Pagar:</span>
+                    <span id="modal-total-price">$0.00</span>
                 </div>
             </div>
 
-            <button id="btn-pay" class="btn btn-primary">Pagar y Confirmar</button>
-            <button id="btn-cancel" class="btn btn-outline">Cancelar y liberar asiento</button>
+            <div class="payment-actions">
+                <button id="btn-pay" class="btn btn-primary">Pagar Ahora <i class="fas fa-credit-card"></i></button>
+                <button id="btn-cancel" class="btn btn-outline">Cancelar Reserva</button>
+            </div>
         </div>
     </div>
 
     <!-- Success Modal -->
     <div id="success-modal" class="modal-overlay">
-        <div class="modal-content" style="text-align: center;">
-            <div class="success-icon">✓</div>
-            <h3 style="font-family: 'Outfit'; font-size: 2rem; margin-bottom: 1rem;">¡Pago Exitoso!</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Tu entrada ya está asegurada. Te enviamos los detalles a tu correo electrónico.</p>
-            <button onclick="location.reload()" class="btn btn-primary">Volver al inicio</button>
+        <div class="modal-content text-center">
+            <div class="success-check">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>¡Reserva Confirmada!</h2>
+            <p>Tu pago ha sido procesado con éxito. Recibirás tus entradas por correo.</p>
+            <button onclick="location.reload()" class="btn btn-primary">Finalizar</button>
         </div>
     </div>
 
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=5"></script>
 </body>
 </html>
