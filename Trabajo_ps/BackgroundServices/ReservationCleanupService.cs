@@ -74,7 +74,7 @@ namespace Trabajo_ps.BackgroundServices
                             // Audit Log
                             var audit = new AuditLog
                             {
-                                UserId = 0, // System
+                                UserId = null, // System
                                 Action = AuditAction.RELEASE_SEAT.ToString(),
                                 EntityType = nameof(Reservation),
                                 EntityId = reservation.Id.ToString(),
