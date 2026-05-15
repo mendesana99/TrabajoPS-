@@ -20,13 +20,16 @@ namespace Trabajo_ps.Controllers
         }
 
         /// <summary>
-        /// Reserva una butaca. (POST /api/v1/Reservations)
+        /// Inicia el proceso de reserva bloqueando un asiento temporalmente.
         /// </summary>
-        /// <param name="request">Los datos de la reserva (SeatId, UserId).</param>
-        /// <returns>La reserva creada con tiempo de expiración.</returns>
-        /// <response code="201">Reserva creada exitosamente.</response>
-        /// <response code="404">Si el asiento no existe.</response>
-        /// <response code="409">Si el asiento ya no está disponible.</response>
+        /// <remarks>
+        /// El asiento quedará bloqueado por 5 minutos hasta que se confirme el pago.
+        /// </remarks>
+        /// <param name="request">DTO con SeatId (Guid) y UserId (int).</param>
+        /// <returns>Detalles de la reserva y tiempo de expiración.</returns>
+        /// <response code="201">Reserva creada y asiento bloqueado.</response>
+        /// <response code="404">Si el asiento solicitado no existe.</response>
+        /// <response code="409">Si el asiento ya está reservado o vendido.</response>
         [HttpPost]
         [ProducesResponseType(typeof(ReserveSeatResponse), 201)]
         [ProducesResponseType(404)]
@@ -39,13 +42,16 @@ namespace Trabajo_ps.Controllers
         }
 
         /// <summary>
-        /// Confirma el pago de una reserva. (POST /api/v1/Reservations/{id}/payments)
+        /// Confirma y finaliza el pago de una reserva activa.
         /// </summary>
-        /// <param name="id">El ID de la reserva.</param>
-        /// <param name="request">Detalles del usuario.</param>
-        /// <returns>Resultado de la operación.</returns>
-        /// <response code="200">Pago confirmado.</response>
-        /// <response code="404">Si la reserva no existe.</response>
+        /// <remarks>
+        /// Cambia el estado del asiento a 'Sold' y confirma la transacción.
+        /// </remarks>
+        /// <param name="id">ID de la reserva (Guid).</param>
+        /// <param name="request">DTO con el ID del usuario que realiza el pago.</param>
+        /// <returns>Mensaje de éxito si el pago fue procesado.</returns>
+        /// <response code="200">Pago procesado y reserva finalizada.</response>
+        /// <response code="404">Si la reserva no existe o ya expiró.</response>
         [HttpPost("{id}/payments")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

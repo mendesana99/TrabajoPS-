@@ -23,12 +23,14 @@ namespace Trabajo_ps.Controllers
         }
 
         /// <summary>
-        /// Obtiene un listado paginado de eventos.
+        /// Obtiene un listado paginado de todos los eventos disponibles.
         /// </summary>
-        /// <param name="page">Número de página (por defecto 1).</param>
-        /// <param name="pageSize">Tamaño de la página (por defecto 10).</param>
-        /// <returns>Resultado paginado con los eventos disponibles.</returns>
+        /// <param name="page">Número de la página a consultar (empieza en 1).</param>
+        /// <param name="pageSize">Cantidad de eventos por página.</param>
+        /// <returns>Objeto con la lista de eventos y metadatos de paginación.</returns>
+        /// <response code="200">Retorna el catálogo de eventos.</response>
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetEvents([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var query = new GetEventsQuery { Page = page, PageSize = pageSize };
@@ -37,11 +39,18 @@ namespace Trabajo_ps.Controllers
         }
 
         /// <summary>
-        /// Obtiene las butacas asociadas a un evento específico.
+        /// Obtiene el mapa de butacas para un evento específico.
         /// </summary>
-        /// <param name="id">El ID del evento.</param>
-        /// <returns>Una lista de butacas con su estado (Available/Reserved/Sold).</returns>
+        /// <remarks>
+        /// Útil para renderizar el mapa de asientos en el frontend.
+        /// </remarks>
+        /// <param name="id">ID único del evento.</param>
+        /// <returns>Lista de objetos SeatDto con su estado actual.</returns>
+        /// <response code="200">Lista de butacas obtenida.</response>
+        /// <response code="404">Si el evento no existe o no tiene butacas.</response>
         [HttpGet("{id}/seats")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetSeatsByEvent(int id)
         {
             var query = new GetSeatsByEventQuery(id);

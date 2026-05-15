@@ -1,55 +1,61 @@
-# Ticketing Platform - Proyecto de Software 🎫
+# TicketPlatform - Premium Entertainment System
 
-Sistema robusto de reserva y venta de entradas con gestión de alta concurrencia, transacciones ACID y procesos asíncronos.
+Sistema de reserva de tickets profesional desarrollado con **.NET 8** (Clean Architecture) y **Vanilla Frontend**.
 
-## 🚀 Características Principales
+## 🚀 Cómo empezar
 
-- **Arquitectura Limpia (Clean Architecture):** Separación estricta de responsabilidades en capas (Domain, Application, Infrastructure, Web API).
-- **Control de Concurrencia:** Implementación de *Optimistic Locking* mediante campos de versión para evitar la doble reserva de butacas.
-- **Transaccionalidad ACID:** Operaciones críticas (reserva y pago) envueltas en transacciones para asegurar la integridad de los datos.
-- **Procesos en Segundo Plano:** Background Service encargado de la liberación automática de reservas vencidas (5 minutos).
-- **Auditoría Completa:** Registro inmutable de cada acción (intentos exitosos, fallidos, pagos y liberaciones).
-- **API RESTful:** Cumplimiento de estándares de industria (sustantivos plurales, códigos HTTP correctos, versionado v1).
-- **Frontend Dinámico:** Interfaz moderna con catálogo de eventos, mapa de asientos interactivo, temporizadores y notificaciones en tiempo real.
+### 1. Requisitos previos
+* [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* [SQL Server Express / LocalDB](https://learn.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb)
 
-## 🛠️ Tecnologías Utilizadas
+### 2. Configuración del Backend
+1. Navega a la carpeta del proyecto API:
+   ```bash
+   cd Trabajo_ps
+   ```
+2. Restaura las dependencias:
+   ```bash
+   dotnet restore
+   ```
+3. Aplica las migraciones para crear la base de datos local:
+   ```bash
+   dotnet ef database update --project ../Infrastructure/Infrastructure.csproj --startup-project ./Trabajo_ps.csproj
+   ```
+4. Ejecuta el servidor:
+   ```bash
+   dotnet run
+   ```
+   El servidor estará disponible en `http://localhost:5000` y el **Swagger** en `http://localhost:5000/swagger`.
 
-- **Backend:** .NET 8, Entity Framework Core 8, SQL Server.
-- **Frontend:** HTML5, CSS3 (Vanilla), JavaScript (Fetch API).
-- **Documentación:** Swagger / OpenAPI.
-
-## 📦 Instalación y Configuración
-
-### Pre-requisitos
-- .NET 8 SDK
-- SQL Server (LocalDB o instancia superior)
-
-### 1. Configuración de la Base de Datos
-Desde la raíz del proyecto, ejecuta los siguientes comandos para aplicar las migraciones y crear la base de datos:
-
-```bash
-# Navegar a la carpeta del proyecto API
-cd Trabajo_ps
-
-# Ejecutar migraciones (se crearán automáticamente los datos de prueba / Seed)
-dotnet ef database update --project ../Infrastructure --startup-project .
-```
-
-### 2. Ejecutar el Backend
-```bash
-dotnet run
-```
-La API estará disponible en `http://localhost:5000` y la documentación interactiva en `http://localhost:5000/swagger`.
-
-### 3. Ejecutar el Frontend
-El frontend es independiente del backend. Puedes abrir el archivo `Frontend/index.html` directamente en tu navegador o utilizar un servidor estático (ej: Live Server en VS Code).
-
-Asegúrate de que la API esté corriendo para que el frontend pueda consumir los datos.
-
-## 📝 Auditoría y Trazabilidad
-El sistema registra cada milisegundo de actividad en la tabla `AuditLogs`. Puedes consultar esta tabla para verificar la resolución de conflictos de concurrencia y la liberación automática de asientos.
+### 3. Configuración del Frontend
+El frontend es totalmente independiente. No requiere compilación.
+1. Abre el archivo `Frontend/index.html` directamente en tu navegador o usa una extensión como *Live Server* en VS Code.
+2. Asegúrate de que el backend esté corriendo para que las llamadas a la API funcionen.
 
 ---
-**Cátedra:** Proyecto de Software  
-**Docente:** Ing. Olivera Lucas  
-**Grupo:** 10 (Mendes Ana, Condori Edson)
+
+## 🏗️ Arquitectura del Proyecto
+El sistema sigue los principios de **Clean Architecture** y **CQRS**:
+
+*   **Domain**: Entidades puras y excepciones de dominio.
+*   **Application**: Casos de uso, DTOs, interfaces de repositorio y lógica de negocio.
+*   **Infrastructure**: Implementación de persistencia (EF Core), Unit of Work y servicios externos.
+*   **API (Trabajo_ps)**: Controladores, middlewares y configuración de la app.
+
+## 🛠️ Tecnologías utilizadas
+*   **Backend**: C# 12, ASP.NET Core 8, Entity Framework Core 8.
+*   **Frontend**: HTML5, CSS3 (Vanilla), JavaScript (ES6+).
+*   **Base de Datos**: SQL Server.
+*   **Documentación**: Swagger / OpenAPI.
+
+---
+
+## 📋 Observaciones Corregidas (Entrega 2)
+*   [x] Eliminación de dependencias de BD en Application.
+*   [x] Implementación de Middleware Global de Excepciones.
+*   [x] Rutas RESTful (sin verbos en la URL).
+*   [x] Paginación en catálogo de eventos.
+*   [x] Fluent API con precisión y longitudes explícitas.
+*   [x] Auditoría de intentos fallidos.
+*   [x] Actualización parcial del mapa de asientos (sin recargar).
+*   [x] Sistema de notificaciones moderno (Toasts).
