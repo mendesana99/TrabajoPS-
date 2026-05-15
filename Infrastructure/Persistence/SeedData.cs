@@ -44,18 +44,25 @@ namespace Infrastructure.Persistence
                 Status = "Active"
             };
 
-            await context.Events.AddRangeAsync(event1, event2, event3);
+            var event4 = new Event { Name = "Festival Indie: Sonidos", EventDate = DateTime.UtcNow.AddDays(75), Venue = "Hipódromo", Status = "Active" };
+            var event5 = new Event { Name = "Ópera: La Traviata", EventDate = DateTime.UtcNow.AddDays(90), Venue = "Teatro Colón", Status = "Active" };
+            var event6 = new Event { Name = "Comedy Night: Stand Up", EventDate = DateTime.UtcNow.AddDays(20), Venue = "Paseo La Plaza", Status = "Active" };
+
+            await context.Events.AddRangeAsync(event1, event2, event3, event4, event5, event6);
             await context.SaveChangesAsync();
 
-            // Crear sectores para el evento 1
+            // Crear sectores para los eventos iniciales
             var sector1 = new Sector { EventId = event1.Id, Name = "Platea Baja", Price = 15000, Capacity = 50 };
             var sector2 = new Sector { EventId = event1.Id, Name = "Platea Alta", Price = 10000, Capacity = 50 };
-
-            // Sectores para evento 2
             var sector3 = new Sector { EventId = event2.Id, Name = "Palco", Price = 25000, Capacity = 20 };
             var sector4 = new Sector { EventId = event2.Id, Name = "General", Price = 5000, Capacity = 100 };
 
-            await context.Sectors.AddRangeAsync(sector1, sector2, sector3, sector4);
+            // Crear sectores para los nuevos eventos
+            var s5 = new Sector { EventId = event4.Id, Name = "Campo", Price = 8000, Capacity = 50 };
+            var s6 = new Sector { EventId = event5.Id, Name = "Palco Bajo", Price = 30000, Capacity = 10 };
+            var s7 = new Sector { EventId = event6.Id, Name = "Platea", Price = 4500, Capacity = 40 };
+
+            await context.Sectors.AddRangeAsync(sector1, sector2, sector3, sector4, s5, s6, s7);
             await context.SaveChangesAsync();
 
             // Crear butacas
@@ -85,13 +92,22 @@ namespace Infrastructure.Persistence
 
             for (int i = 1; i <= 20; i++)
             {
-                seats.Add(new Seat
-                {
-                    SectorId = sector3.Id,
-                    RowIdentifier = "VIP",
-                    SeatNumber = i,
-                    Status = "Available"
-                });
+                seats.Add(new Seat { SectorId = sector3.Id, RowIdentifier = "VIP", SeatNumber = i, Status = "Available" });
+            }
+
+            for (int i = 1; i <= 20; i++)
+            {
+                seats.Add(new Seat { SectorId = s5.Id, RowIdentifier = "C", SeatNumber = i, Status = "Available" });
+            }
+
+            for (int i = 1; i <= 10; i++)
+            {
+                seats.Add(new Seat { SectorId = s6.Id, RowIdentifier = "P", SeatNumber = i, Status = "Available" });
+            }
+
+            for (int i = 1; i <= 30; i++)
+            {
+                seats.Add(new Seat { SectorId = s7.Id, RowIdentifier = "R", SeatNumber = i, Status = "Available" });
             }
 
             await context.Seats.AddRangeAsync(seats);

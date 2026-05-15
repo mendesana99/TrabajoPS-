@@ -12,7 +12,10 @@
     <div id="toast-container" class="toast-container"></div>
 
     <header>
-        <div class="logo">Ticket<span>Platform</span></div>
+        <div class="logo" onclick="showCatalog()" style="cursor: pointer">Ticket<span>Platform</span></div>
+        <nav class="main-nav">
+            <button onclick="showCatalog()" class="btn-nav"><i class="fas fa-home"></i> Inicio</button>
+        </nav>
         <div class="user-profile hidden" id="user-profile">
             <div class="avatar" id="user-avatar">M</div>
             <span id="user-name">Usuario</span>
