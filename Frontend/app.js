@@ -10,10 +10,19 @@ const selectionView = document.getElementById('selection-view');
 const elEventsList = document.getElementById('events-list');
 const elSeatsMap = document.getElementById('seats-map');
 const elCountdown = document.getElementById('countdown');
+const timerPath = document.getElementById('timer-path');
 
 const modalLogin = document.getElementById('login-modal');
 const modalPayment = document.getElementById('payment-modal');
 const modalSuccess = document.getElementById('success-modal');
+
+// Mapped Posters for realism (Restaurado)
+const EVENT_POSTERS = [
+    'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1974&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=2070&auto=format&fit=crop'
+];
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,13 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
 function showCatalog() {
     selectionView.classList.add('hidden');
     catalogView.classList.remove('hidden');
-    document.getElementById('hero-section').style.display = 'flex';
+    document.getElementById('hero-section').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showSelection() {
     catalogView.classList.add('hidden');
     selectionView.classList.remove('hidden');
-    document.getElementById('hero-section').style.display = 'none';
+    document.getElementById('hero-section').classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Session Management
@@ -53,7 +64,7 @@ document.getElementById('btn-login').onclick = async () => {
     const password = document.getElementById('login-password').value;
     const btn = document.getElementById('btn-login');
 
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Entrando...';
     btn.disabled = true;
 
     try {
@@ -68,11 +79,11 @@ document.getElementById('btn-login').onclick = async () => {
         const user = await response.json();
         localStorage.setItem('loggedUser', JSON.stringify(user));
         checkSession();
-        showNotification('Bienvenido de nuevo!', 'success');
+        showNotification('¡Bienvenido de nuevo!', 'success');
     } catch (err) {
         showNotification(err.message, 'error');
     } finally {
-        btn.innerHTML = 'Iniciar Sesión';
+        btn.innerHTML = 'Entrar <i class="fas fa-arrow-right"></i>';
         btn.disabled = false;
     }
 };
@@ -102,7 +113,7 @@ function showNotification(message, type = 'success') {
     }, 4000);
 }
 
-// Load Events Catalog
+// Load Events Catalog (Restaurado con Posters y Formato)
 async function loadEvents() {
     try {
         const res = await fetch(`${API_BASE}/Events`);
@@ -110,31 +121,32 @@ async function loadEvents() {
         const events = result.data || result;
 
         elEventsList.innerHTML = '';
-        events.forEach(event => {
+        events.forEach((event, idx) => {
+            const poster = EVENT_POSTERS[idx % EVENT_POSTERS.length];
             const card = document.createElement('div');
             card.className = 'event-card';
             card.innerHTML = `
-                <div class="card-img"><i class="fas fa-ticket-alt"></i></div>
+                <div class="card-img" style="background-image: url('${poster}')"></div>
                 <div class="card-body">
-                    <div class="event-tag">Tour 2026</div>
                     <h3>${event.name}</h3>
                     <p><i class="fas fa-map-marker-alt"></i> ${event.venue}</p>
-                    <p><i class="fas fa-calendar-day"></i> ${new Date(event.eventDate).toLocaleDateString()}</p>
+                    <p><i class="fas fa-calendar-day"></i> ${new Date(event.eventDate).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</p>
                 </div>
             `;
-            card.onclick = () => selectEvent(event);
+            card.onclick = () => selectEvent(event, poster);
             elEventsList.appendChild(card);
         });
     } catch (err) {
-        showNotification('Error al cargar catálogo', 'error');
+        showNotification('Error al conectar con el servidor', 'error');
     }
 }
 
-async function selectEvent(event) {
+async function selectEvent(event, poster) {
     currentEventId = event.id;
     document.getElementById('event-title').textContent = event.name;
     document.getElementById('event-venue').textContent = event.venue;
-    document.getElementById('checkout-event-name').textContent = event.name;
+    document.getElementById('event-date').textContent = new Date(event.eventDate).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('mini-poster').style.backgroundImage = `url('${poster}')`;
     
     showSelection();
     await loadSeats();
@@ -161,7 +173,7 @@ async function loadSeats() {
             elSeatsMap.appendChild(el);
         });
     } catch (err) {
-        showNotification('Error al cargar mapa', 'error');
+        showNotification('Error al cargar mapa de asientos', 'error');
     }
 }
 
@@ -177,12 +189,12 @@ async function reserveSeat(seat) {
         });
 
         if (res.status === 409) {
-            showNotification('El asiento acaba de ser ocupado', 'error');
+            showNotification('¡Ups! El asiento se ocupó recién.', 'error');
             loadSeats();
             return;
         }
 
-        if (!res.ok) throw new Error('Error al reservar');
+        if (!res.ok) throw new Error('No se pudo reservar');
 
         const result = await res.json();
         currentReservationId = result.reservationId || result.id;
@@ -192,7 +204,7 @@ async function reserveSeat(seat) {
         
         modalPayment.classList.add('active');
         
-        // Optimistic UI update
+        // Optimistic UI update (Manteniendo mejora)
         const el = document.getElementById(`seat-${seat.id}`);
         if (el) {
             el.className = 'seat reserved';
@@ -209,6 +221,8 @@ async function reserveSeat(seat) {
 
 function startTimer(expiresAt, seatId) {
     clearInterval(countdownInterval);
+    const duration = 5 * 60 * 1000; // 5 minutes
+
     countdownInterval = setInterval(() => {
         const now = new Date();
         const diff = expiresAt - now;
@@ -218,7 +232,7 @@ function startTimer(expiresAt, seatId) {
             modalPayment.classList.remove('active');
             showNotification('La reserva expiró por tiempo.', 'error');
             
-            // Partial update: set seat back to available
+            // Partial update: set seat back to available (Manteniendo mejora)
             const el = document.getElementById(`seat-${seatId}`);
             if (el) {
                 el.className = 'seat available';
@@ -234,12 +248,19 @@ function startTimer(expiresAt, seatId) {
         const m = Math.floor((diff / 1000 / 60) % 60);
         const s = Math.floor((diff / 1000) % 60);
         elCountdown.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        
+        // Progress ring logic (Manteniendo estética premium)
+        if (timerPath) {
+            const percent = (diff / duration) * 100;
+            timerPath.setAttribute('stroke-dasharray', `${percent}, 100`);
+        }
     }, 1000);
 }
 
 document.getElementById('btn-pay').onclick = async () => {
     const btn = document.getElementById('btn-pay');
-    btn.innerHTML = 'Procesando... <i class="fas fa-spinner fa-spin"></i>';
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
     btn.disabled = true;
 
     try {
@@ -249,15 +270,25 @@ document.getElementById('btn-pay').onclick = async () => {
             body: JSON.stringify({ userId: USER_ID })
         });
 
-        if (!res.ok) throw new Error('Error en el pago');
+        if (!res.ok) throw new Error('Error al procesar el pago');
 
         clearInterval(countdownInterval);
         modalPayment.classList.remove('active');
         modalSuccess.classList.add('active');
+        
+        // CELEBRATION!
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#6366f1', '#a855f7', '#10b981']
+            });
+        }
+
     } catch (err) {
         showNotification(err.message, 'error');
-    } finally {
-        btn.innerHTML = 'Pagar Ahora <i class="fas fa-credit-card"></i>';
+        btn.innerHTML = originalText;
         btn.disabled = false;
     }
 };
