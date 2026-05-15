@@ -42,27 +42,37 @@ namespace Infrastructure.Persistence
             // Fluent API Configurations
             modelBuilder.Entity<Sector>()
                 .Property(s => s.Price)
-                .HasColumnType("decimal(18,2)");
+                .HasPrecision(18, 2);
+
             modelBuilder.Entity<Sector>()
                 .Property(s => s.Name)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired();
 
             modelBuilder.Entity<Event>()
                 .Property(e => e.Name)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired();
+
             modelBuilder.Entity<Event>()
                 .Property(e => e.Venue)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired();
+
             modelBuilder.Entity<Event>()
                 .Property(e => e.Status)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired();
 
             modelBuilder.Entity<Seat>()
                 .Property(s => s.RowIdentifier)
-                .HasMaxLength(10);
+                .HasMaxLength(10)
+                .IsRequired();
+
             modelBuilder.Entity<Seat>()
                 .Property(s => s.Status)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired();
 
             modelBuilder.Entity<Seat>()
                 .Property(s => s.Version)
@@ -70,24 +80,42 @@ namespace Infrastructure.Persistence
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Name)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired();
+
             modelBuilder.Entity<User>()
                 .Property(u => u.Email)
-                .HasMaxLength(200);
+                .HasMaxLength(200)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.PasswordHash)
+                .HasMaxLength(200)
+                .IsRequired();
 
             modelBuilder.Entity<Reservation>()
                 .Property(r => r.Status)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired();
 
             modelBuilder.Entity<AuditLog>()
                 .Property(a => a.Action)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired();
+
             modelBuilder.Entity<AuditLog>()
                 .Property(a => a.EntityType)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired();
+
             modelBuilder.Entity<AuditLog>()
                 .Property(a => a.EntityId)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired();
+
+            modelBuilder.Entity<AuditLog>()
+                .Property(a => a.Details)
+                .HasMaxLength(2000);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

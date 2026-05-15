@@ -150,8 +150,10 @@ async function loadSeats() {
             const el = document.createElement('div');
             el.className = `seat ${seat.status.toLowerCase()}`;
             el.id = `seat-${seat.id}`;
-            el.textContent = seat.seatNumber;
-            el.title = `${seat.rowIdentifier}${seat.seatNumber} - $${seat.sector?.price || 0}`;
+            
+            // Show Row + Number for clarity (e.g. A1, B5)
+            el.innerHTML = `<span class="row-id">${seat.rowIdentifier}</span>${seat.seatNumber}`;
+            el.title = `Fila ${seat.rowIdentifier} - Asiento ${seat.seatNumber} - $${seat.price}`;
             
             if (seat.status === 'Available') {
                 el.onclick = () => reserveSeat(seat);
@@ -185,8 +187,8 @@ async function reserveSeat(seat) {
         const result = await res.json();
         currentReservationId = result.reservationId || result.id;
         
-        document.getElementById('modal-seat-info').textContent = `${seat.rowIdentifier} - ${seat.seatNumber}`;
-        document.getElementById('modal-total-price').textContent = `$${seat.sector?.price || 0}`;
+        document.getElementById('modal-seat-info').textContent = `${seat.rowIdentifier}${seat.seatNumber}`;
+        document.getElementById('modal-total-price').textContent = `$${seat.price}`;
         
         modalPayment.classList.add('active');
         
@@ -197,15 +199,15 @@ async function reserveSeat(seat) {
             el.onclick = null;
         }
 
-        startTimer(new Date(result.expiresAt));
-        showNotification('Asiento bloqueado por 5 minutos', 'success');
+        startTimer(new Date(result.expiresAt), seat.id);
+        showNotification('Asiento bloqueado temporalmente', 'success');
         
     } catch (err) {
         showNotification(err.message, 'error');
     }
 }
 
-function startTimer(expiresAt) {
+function startTimer(expiresAt, seatId) {
     clearInterval(countdownInterval);
     countdownInterval = setInterval(() => {
         const now = new Date();
@@ -214,8 +216,18 @@ function startTimer(expiresAt) {
         if (diff <= 0) {
             clearInterval(countdownInterval);
             modalPayment.classList.remove('active');
-            showNotification('La reserva ha expirado', 'error');
-            loadSeats();
+            showNotification('La reserva expiró por tiempo.', 'error');
+            
+            // Partial update: set seat back to available
+            const el = document.getElementById(`seat-${seatId}`);
+            if (el) {
+                el.className = 'seat available';
+                el.onclick = () => {
+                    const row = el.querySelector('.row-id').textContent;
+                    const num = el.textContent.replace(row, '');
+                    reserveSeat({ id: seatId, rowIdentifier: row, seatNumber: num, price: document.getElementById('modal-total-price').textContent.replace('$', '') });
+                };
+            }
             return;
         }
         
@@ -231,7 +243,7 @@ document.getElementById('btn-pay').onclick = async () => {
     btn.disabled = true;
 
     try {
-        const res = await fetch(`${API_BASE}/Reservations/${currentReservationId}/payment`, {
+        const res = await fetch(`${API_BASE}/Reservations/${currentReservationId}/payments`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: USER_ID })
@@ -255,4 +267,3 @@ document.getElementById('btn-cancel').onclick = () => {
     clearInterval(countdownInterval);
     loadSeats();
 };
-

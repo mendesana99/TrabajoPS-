@@ -19,7 +19,7 @@ namespace Infrastructure.Persistence
             if (await context.Events.AnyAsync())
                 return;
 
-            // Crear evento
+            // Crear eventos
             var event1 = new Event
             {
                 Name = "Concierto de Rock 2026",
@@ -28,27 +28,34 @@ namespace Infrastructure.Persistence
                 Status = "Active"
             };
 
-            await context.Events.AddAsync(event1);
+            var event2 = new Event
+            {
+                Name = "Teatro: El Fantasma",
+                EventDate = DateTime.UtcNow.AddDays(45),
+                Venue = "Teatro Colón",
+                Status = "Active"
+            };
+
+            var event3 = new Event
+            {
+                Name = "Fútbol: Final Copa",
+                EventDate = DateTime.UtcNow.AddDays(60),
+                Venue = "Estadio Kempes",
+                Status = "Active"
+            };
+
+            await context.Events.AddRangeAsync(event1, event2, event3);
             await context.SaveChangesAsync();
 
-            // Crear sectores
-            var sector1 = new Sector
-            {
-                EventId = event1.Id,
-                Name = "Platea Baja",
-                Price = 15000,
-                Capacity = 50
-            };
+            // Crear sectores para el evento 1
+            var sector1 = new Sector { EventId = event1.Id, Name = "Platea Baja", Price = 15000, Capacity = 50 };
+            var sector2 = new Sector { EventId = event1.Id, Name = "Platea Alta", Price = 10000, Capacity = 50 };
 
-            var sector2 = new Sector
-            {
-                EventId = event1.Id,
-                Name = "Platea Alta",
-                Price = 10000,
-                Capacity = 50
-            };
+            // Sectores para evento 2
+            var sector3 = new Sector { EventId = event2.Id, Name = "Palco", Price = 25000, Capacity = 20 };
+            var sector4 = new Sector { EventId = event2.Id, Name = "General", Price = 5000, Capacity = 100 };
 
-            await context.Sectors.AddRangeAsync(sector1, sector2);
+            await context.Sectors.AddRangeAsync(sector1, sector2, sector3, sector4);
             await context.SaveChangesAsync();
 
             // Crear butacas
@@ -71,6 +78,17 @@ namespace Infrastructure.Persistence
                 {
                     SectorId = sector2.Id,
                     RowIdentifier = $"Fila {((i - 1) / 10) + 1}",
+                    SeatNumber = i,
+                    Status = "Available"
+                });
+            }
+
+            for (int i = 1; i <= 20; i++)
+            {
+                seats.Add(new Seat
+                {
+                    SectorId = sector3.Id,
+                    RowIdentifier = "VIP",
                     SeatNumber = i,
                     Status = "Available"
                 });

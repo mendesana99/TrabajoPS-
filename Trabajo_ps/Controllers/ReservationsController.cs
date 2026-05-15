@@ -20,64 +20,40 @@ namespace Trabajo_ps.Controllers
         }
 
         /// <summary>
-        /// Reserva una butaca.
+        /// Reserva una butaca. (POST /api/v1/Reservations)
         /// </summary>
-        /// <param name="request">Los datos de la reserva.</param>
+        /// <param name="request">Los datos de la reserva (SeatId, UserId).</param>
         /// <returns>La reserva creada con tiempo de expiración.</returns>
+        /// <response code="201">Reserva creada exitosamente.</response>
+        /// <response code="404">Si el asiento no existe.</response>
+        /// <response code="409">Si el asiento ya no está disponible.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(ReserveSeatResponse), 201)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
         public async Task<IActionResult> ReserveSeat([FromBody] ReserveSeatRequest request)
         {
-            try
-            {
-                var command = new ReserveSeatCommand(request.SeatId, request.UserId);
-                var result = await _reserveSeatHandler.HandleAsync(command);
-                return Created($"/api/v1/Reservations/{result.ReservationId}", result);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
-            catch (NoSeatsAvailableException ex)
-            {
-                return Conflict(new { error = ex.Message });
-            }
-            catch (DomainException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { error = "Error interno del servidor" });
-            }
+            var command = new ReserveSeatCommand(request.SeatId, request.UserId);
+            var result = await _reserveSeatHandler.HandleAsync(command);
+            return Created($"/api/v1/Reservations/{result.ReservationId}", result);
         }
 
         /// <summary>
-        /// Confirma el pago de una reserva existente.
+        /// Confirma el pago de una reserva. (POST /api/v1/Reservations/{id}/payments)
         /// </summary>
         /// <param name="id">El ID de la reserva.</param>
-        /// <param name="request">Los detalles del pago (UserId).</param>
-        /// <returns>Confirmación de pago.</returns>
-        [HttpPost("{id}/payment")]
+        /// <param name="request">Detalles del usuario.</param>
+        /// <returns>Resultado de la operación.</returns>
+        /// <response code="200">Pago confirmado.</response>
+        /// <response code="404">Si la reserva no existe.</response>
+        [HttpPost("{id}/payments")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> ConfirmPayment(Guid id, [FromBody] ConfirmPaymentRequest request)
         {
-            try
-            {
-                var command = new ConfirmPaymentCommand(id, request.UserId);
-                var result = await _confirmPaymentHandler.HandleAsync(command);
-                return Ok(new { success = result, message = "Pago confirmado exitosamente" });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new { error = ex.Message });
-            }
-            catch (DomainException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { error = "Error interno del servidor" });
-            }
+            var command = new ConfirmPaymentCommand(id, request.UserId);
+            var result = await _confirmPaymentHandler.HandleAsync(command);
+            return Ok(new { success = result, message = "Pago confirmado exitosamente" });
         }
     }
 }

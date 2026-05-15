@@ -18,24 +18,20 @@ namespace Application.UseCases.Events.Handlers
 
         public async Task<PaginatedResult<EventResponse>> HandleAsync(GetEventsQuery query)
         {
-            var events = await _unitOfWork.Events.GetAllAsync();
+            var (data, total) = await _unitOfWork.Events.GetPaginatedAsync(query.Page, query.PageSize);
             
-            var total = events.Count();
-            var paginatedEvents = events
-                .Skip((query.Page - 1) * query.PageSize)
-                .Take(query.PageSize)
-                .Select(e => new EventResponse
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Venue = e.Venue,
-                    EventDate = e.EventDate,
-                    Status = e.Status
-                });
+            var eventResponses = data.Select(e => new EventResponse
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Venue = e.Venue,
+                EventDate = e.EventDate,
+                Status = e.Status
+            });
 
             return new PaginatedResult<EventResponse>
             {
-                Data = paginatedEvents,
+                Data = eventResponses,
                 Total = total,
                 Page = query.Page,
                 PageSize = query.PageSize
