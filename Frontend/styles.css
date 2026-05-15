@@ -249,6 +249,24 @@ header {
     padding: 30px;
 }
 
+@media (max-width: 768px) {
+    .selection-layout {
+        width: 100vw; /* Ensure it fits the screen width */
+        padding: 0 0px; /* Add some padding for better appearance */
+        box-sizing: border-box; /* Include padding in width calculation */
+        grid-template-columns:  0fr; /* Stack seats vertically on small screens */
+        outline: none; /* Remove any default focus outline */
+    }
+
+    .view-container {
+        padding: 60px 0px; /* Add horizontal padding for smaller screens */
+    }
+        
+    .glass-panel{
+        padding: 42px; /* Reduce padding for smaller screens */
+    }
+}
+
 .event-poster-mini {
     height: 150px;
     background: var(--accent-gradient);
