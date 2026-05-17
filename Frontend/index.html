@@ -11,11 +11,13 @@
 
     <div id="toast-container" class="toast-container"></div>
 
-    <header>
+    <header class="main-header">
         <div class="logo" onclick="showCatalog()" style="cursor: pointer">Ticket<span>Platform</span></div>
+    <!--   
         <nav class="main-nav">
             <button onclick="showCatalog()" class="btn-nav"><i class="fas fa-home"></i> Inicio</button>
         </nav>
+    -->
         <div class="user-profile hidden" id="user-profile">
             <div class="avatar" id="user-avatar">M</div>
             <span id="user-name">Usuario</span>
@@ -51,7 +53,8 @@
         <!-- Selection View (Hidden by default) -->
         <div id="selection-view" class="view-container hidden">
             <div class="back-nav">
-                <button onclick="showCatalog()" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al Catálogo</button>
+                <button onclick="showCatalog()" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver al Catálogo</button>
             </div>
             
             <div class="selection-layout">
