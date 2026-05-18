@@ -202,7 +202,10 @@ async function reserveSeat(seat) {
         const result = await res.json();
         currentReservationId = result.reservationId || result.id;
         
-        document.getElementById('modal-seat-info').textContent = `${seat.rowIdentifier}${seat.seatNumber}`;
+        const eventName = document.getElementById('event-title').textContent;
+        document.getElementById('checkout-event-name').textContent = `${eventName}`;
+        document.getElementById('modal-seat-info').textContent = `${seat.rowIdentifier}`;
+        document.getElementById('modal-seat-number').textContent = `${seat.seatNumber}`;
         document.getElementById('modal-total-price').textContent = `$${seat.price}`;
         
         modalPayment.classList.add('active');
